@@ -9,18 +9,23 @@ public class Player : MonoBehaviour
     [SerializeField] float speed;
     [SerializeField] bool grounded;
     [SerializeField] Animator animator;
+    [SerializeField] SpriteRenderer renderer;
     private float lastYPos;
+    private float lastXPos;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         grounded = false;
         lastYPos = transform.position.y;
+        lastXPos = transform.position.x;
     }
     void Update()
     {
         CheckForJump();
         CheckMovement();
+        SpriteFlip();
+        CheckAttack();
     }
 
     private void FixedUpdate()
@@ -39,17 +44,9 @@ public class Player : MonoBehaviour
 
     void CheckMovement()
     {
-
-        if (Input.GetKey(KeyCode.A))
-        {
-            transform.position = new Vector3(transform.position.x * -speed * Time.deltaTime, transform.position.y, 0);
-        }
-        if (Input.GetKey(KeyCode.D))
-        {
-            transform.position = new Vector3(transform.position.x * speed * Time.deltaTime, transform.position.y, 0);
-        }
-
-        if ((Input.GetKey(KeyCode.A)||(Input.GetKey(KeyCode.D))))
+        float leftRight = Input.GetAxis("Horizontal");
+        transform.Translate(leftRight * Time.deltaTime * speed, 0, 0);
+        if ((Input.GetKey(KeyCode.A)) || (Input.GetKey(KeyCode.D)) || (Input.GetKey(KeyCode.LeftArrow)) || (Input.GetKey(KeyCode.RightArrow)))
         {
             animator.SetBool("Moving", true);
         }
@@ -87,6 +84,25 @@ public class Player : MonoBehaviour
         {
             grounded = false;
             animator.SetBool("Grounded", false);
+        }
+    }
+    void SpriteFlip()
+    {
+        if ((Input.GetKeyDown(KeyCode.A)) || (Input.GetKeyDown(KeyCode.LeftArrow)))
+        {
+            renderer.flipX = true;
+        }
+        if ((Input.GetKeyDown(KeyCode.LeftArrow)) || (Input.GetKeyDown(KeyCode.D)))
+        {
+            renderer.flipX = false;
+        }
+    }
+
+    void CheckAttack()
+    {
+        if (Input.GetMouseButton(0))
+        {
+            animator.SetTrigger("Attack");
         }
     }
 }
