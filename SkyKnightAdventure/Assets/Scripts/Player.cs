@@ -12,9 +12,12 @@ public class Player : MonoBehaviour
     [SerializeField] SpriteRenderer renderer;
     [SerializeField] int health = 3;
     [SerializeField] float lastYPos;
+    [SerializeField] int whichAttackAnim = 0;
     public bool block;
     public Animator animator;
     public bool attacking;
+    public GameObject swordBox;
+
 
     private void Start()
     {
@@ -22,6 +25,7 @@ public class Player : MonoBehaviour
         grounded = false;
         lastYPos = transform.position.y;
         animator.SetInteger("Health", health);
+        swordBox.SetActive(false);
     }
     void Update()
     {
@@ -113,7 +117,13 @@ public class Player : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
+            if (whichAttackAnim > 2)
+            {
+                whichAttackAnim = 0;
+            }
             animator.SetTrigger("Attack");
+            animator.SetInteger("WhichAttackAnim", whichAttackAnim);
+            whichAttackAnim++;
         }
     }
 
@@ -140,7 +150,15 @@ public class Player : MonoBehaviour
         animator.SetInteger("Health", health);
         if (Input.GetKeyDown(KeyCode.K))
         {
-            health --;
+            if (animator.GetBool("Block"))
+            {
+                animator.SetBool("BlockSuccess", true);
+            }
+            else
+            {
+                health--;
+            }
+            animator.SetBool("Block", false);
         }
     }
 }
