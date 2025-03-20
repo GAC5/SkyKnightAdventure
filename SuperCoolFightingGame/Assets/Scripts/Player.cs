@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -8,29 +9,39 @@ public class Player : MonoBehaviour
     [SerializeField] float jumpForce;
     [SerializeField] float speed;
     [SerializeField] bool grounded;
-    [SerializeField] Animator animator;
     [SerializeField] SpriteRenderer renderer;
-    private float lastYPos;
-    private float lastXPos;
+    [SerializeField] int health = 3;
+    [SerializeField] float lastYPos;
+    public bool block;
+    public Animator animator;
+    public bool attacking;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         grounded = false;
         lastYPos = transform.position.y;
-        lastXPos = transform.position.x;
+        animator.SetInteger("Health", health);
     }
     void Update()
     {
-        CheckForJump();
-        CheckMovement();
-        SpriteFlip();
-        CheckAttack();
+        if (health > 0)
+        {
+            CheckForJump();
+            CheckMovement();
+            SpriteFlip();
+            CheckAttack();
+            CheckBlock();
+        }
+        HealthUpdate();
     }
 
     private void FixedUpdate()
     {
-        CheckForFalling();
+        if (health > 0)
+        {
+            CheckForFalling();
+        }
     }
 
     void CheckForJump ()
@@ -100,9 +111,36 @@ public class Player : MonoBehaviour
 
     void CheckAttack()
     {
-        if (Input.GetMouseButton(0))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             animator.SetTrigger("Attack");
+        }
+    }
+
+    void CheckBlock()
+    {
+        if ((Input.GetKey(KeyCode.S)) || (Input.GetKey(KeyCode.DownArrow)))
+        {
+            if (grounded && !animator.GetBool("Moving"))
+            animator.SetBool("Block", true);
+        }
+        if (!grounded || animator.GetBool("Moving") || (Input.GetKeyUp(KeyCode.S)) || (Input.GetKeyUp(KeyCode.DownArrow)))
+        {
+            animator.SetBool("Block", false);
+        }
+        block = animator.GetBool("Block");
+    }
+
+    void HealthUpdate()
+    {
+        if (health != animator.GetInteger("Health"))
+        {
+            animator.SetTrigger("Hurt");
+        }
+        animator.SetInteger("Health", health);
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            health --;
         }
     }
 }
