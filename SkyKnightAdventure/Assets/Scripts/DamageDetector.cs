@@ -6,23 +6,38 @@ using UnityEngine.VFX;
 
 public class DamageDetector : MonoBehaviour
 {
-    // Start is called before the first frame update
+    [SerializeField] Animator animator;
+    [SerializeField] SpriteRenderer renderer;
+    [SerializeField] int health = 3;
+    [SerializeField] float lastYPos;
+
     void Start()
     {
-        
+        lastYPos = transform.position.y;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
- 
-    }
-
+    //TODO: Figure out wtf causes 2hp to be deducted
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("PlayerStrike"))
+        if (collision.transform.CompareTag("PlayerStrike"))
         {
-            Destroy(gameObject);
+            health--;
+            Debug.Log(health);
+            HealthUpdate();
         }
+    }
+
+    void HealthUpdate()
+    {
+        if (health != animator.GetInteger("Health"))
+        {
+            animator.SetTrigger("Hurt");
+        }
+        animator.SetInteger("Health", health);
+    }
+
+    void Death()
+    {
+        Destroy(gameObject);
     }
 }

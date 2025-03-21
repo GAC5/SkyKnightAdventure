@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 public class Player : MonoBehaviour
 {
@@ -13,7 +15,6 @@ public class Player : MonoBehaviour
     [SerializeField] int health = 3;
     [SerializeField] float lastYPos;
     [SerializeField] int whichAttackAnim = 0;
-    public bool block;
     public Animator animator;
     public bool attacking;
     public GameObject swordBox;
@@ -35,7 +36,7 @@ public class Player : MonoBehaviour
             CheckMovement();
             SpriteFlip();
             CheckAttack();
-            CheckBlock();
+            SwordBoxMove();
         }
         HealthUpdate();
     }
@@ -45,6 +46,18 @@ public class Player : MonoBehaviour
         if (health > 0)
         {
             CheckForFalling();
+        }
+    }
+
+    void SwordBoxMove()
+    {
+        if (renderer.flipX)
+        {
+            swordBox.transform.position = new Vector2(transform.position.x -1, swordBox.transform.position.y);
+        }
+        else
+        {
+            swordBox.transform.position = new Vector2(transform.position.x + 1, swordBox.transform.position.y);
         }
     }
 
@@ -61,7 +74,7 @@ public class Player : MonoBehaviour
     {
         float leftRight = Input.GetAxis("Horizontal");
         transform.Translate(leftRight * Time.deltaTime * speed, 0, 0);
-        if ((Input.GetKey(KeyCode.A)) || (Input.GetKey(KeyCode.D)) || (Input.GetKey(KeyCode.LeftArrow)) || (Input.GetKey(KeyCode.RightArrow)))
+        if ((Input.GetKey(KeyCode.A)) || (Input.GetKey(KeyCode.D)))
         {
             animator.SetBool("Moving", true);
         }
@@ -112,7 +125,7 @@ public class Player : MonoBehaviour
             renderer.flipX = false;
         }
     }
-
+    
     void CheckAttack()
     {
         if (Input.GetKeyDown(KeyCode.Space))
@@ -127,20 +140,6 @@ public class Player : MonoBehaviour
         }
     }
 
-    void CheckBlock()
-    {
-        if ((Input.GetKey(KeyCode.S)) || (Input.GetKey(KeyCode.DownArrow)))
-        {
-            if (grounded && !animator.GetBool("Moving"))
-            animator.SetBool("Block", true);
-        }
-        if (!grounded || animator.GetBool("Moving") || (Input.GetKeyUp(KeyCode.S)) || (Input.GetKeyUp(KeyCode.DownArrow)))
-        {
-            animator.SetBool("Block", false);
-        }
-        block = animator.GetBool("Block");
-    }
-
     void HealthUpdate()
     {
         if (health != animator.GetInteger("Health"))
@@ -150,15 +149,7 @@ public class Player : MonoBehaviour
         animator.SetInteger("Health", health);
         if (Input.GetKeyDown(KeyCode.K))
         {
-            if (animator.GetBool("Block"))
-            {
-                animator.SetBool("BlockSuccess", true);
-            }
-            else
-            {
-                health--;
-            }
-            animator.SetBool("Block", false);
+            health--;
         }
     }
 }
