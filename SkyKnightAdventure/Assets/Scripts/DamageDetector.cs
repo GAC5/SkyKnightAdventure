@@ -8,7 +8,7 @@ public class DamageDetector : MonoBehaviour
 {
     [SerializeField] Animator animator;
     [SerializeField] SpriteRenderer renderer;
-    [SerializeField] int health = 3;
+    [SerializeField] int enemyHealth = 3;
     [SerializeField] float lastYPos;
 
     void Start()
@@ -16,24 +16,28 @@ public class DamageDetector : MonoBehaviour
         lastYPos = transform.position.y;
     }
 
+    private void FixedUpdate()
+    {
+        HealthUpdate();
+    }
+
     //TODO: Figure out wtf causes 2hp to be deducted
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.transform.CompareTag("PlayerStrike"))
+        if (collision.CompareTag("PlayerStrike"))
         {
-            health--;
-            Debug.Log(health);
-            HealthUpdate();
+            enemyHealth--;
+            Debug.Log(enemyHealth);
         }
     }
 
     void HealthUpdate()
     {
-        if (health != animator.GetInteger("Health"))
+        if (enemyHealth != animator.GetInteger("Health"))
         {
             animator.SetTrigger("Hurt");
         }
-        animator.SetInteger("Health", health);
+        animator.SetInteger("Health", enemyHealth);
     }
 
     void Death()
