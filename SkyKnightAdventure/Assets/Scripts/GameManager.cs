@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour
 
     }
 
-    void Restart()
+    public void Restart()
     {
         string currentscene = SceneManager.GetActiveScene().name;
         SceneManager.LoadScene(currentscene);
