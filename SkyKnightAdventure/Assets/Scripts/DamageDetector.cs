@@ -8,8 +8,9 @@ public class DamageDetector : MonoBehaviour
 {
     [SerializeField] Animator animator;
     [SerializeField] SpriteRenderer renderer;
-    [SerializeField] int enemyHealth = 3;
+    [SerializeField] int health = 3;
     [SerializeField] float lastYPos;
+    private int triggered;
 
     void Start()
     {
@@ -21,23 +22,32 @@ public class DamageDetector : MonoBehaviour
         HealthUpdate();
     }
 
-    //TODO: Figure out wtf causes 2hp to be deducted
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("PlayerStrike"))
         {
-            enemyHealth--;
-            Debug.Log(enemyHealth);
+            //PROBLEM: Trigger called twice.
+            //SOLUTION: if/else statement checks how many times trigger is called, if triggered more than once, no health is deducted.
+            triggered++;
+            if (triggered == 1)
+            {
+                health--;
+            }
+            else
+            {
+                triggered = 0;
+            }
+
         }
     }
 
     void HealthUpdate()
     {
-        if (enemyHealth != animator.GetInteger("Health"))
+        if (health != animator.GetInteger("Health"))
         {
             animator.SetTrigger("Hurt");
         }
-        animator.SetInteger("Health", enemyHealth);
+        animator.SetInteger("Health", health);
     }
 
     void Death()

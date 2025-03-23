@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
@@ -12,9 +14,9 @@ public class Player : MonoBehaviour
     [SerializeField] float speed;
     [SerializeField] bool grounded;
     [SerializeField] SpriteRenderer renderer;
-    [SerializeField] int health = 3;
     [SerializeField] float lastYPos;
     [SerializeField] int whichAttackAnim = 0;
+    public int health = 3;
     public Animator animator;
     public bool attacking;
     public GameObject swordBox;
@@ -151,6 +153,12 @@ public class Player : MonoBehaviour
         {
             health--;
         }
+    }
+
+    void Restart()
+    {
+        string currentscene = SceneManager.GetActiveScene().name;
+        SceneManager.LoadScene(currentscene);
     }
 }
 
