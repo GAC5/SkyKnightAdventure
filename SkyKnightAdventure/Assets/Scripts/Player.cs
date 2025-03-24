@@ -88,7 +88,7 @@ public class Player : MonoBehaviour
 
     void CheckForFalling()
     {
-        if (transform.position.y >= lastYPos)
+        if (transform.position.y > lastYPos)
         {
             animator.SetBool("Falling", false);
         }
