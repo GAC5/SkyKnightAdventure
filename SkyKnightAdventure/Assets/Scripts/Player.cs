@@ -65,7 +65,7 @@ public class Player : MonoBehaviour
 
     void CheckForJump ()
     {
-        if (Input.GetKeyDown(KeyCode.W) && grounded)
+        if (grounded && Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.W))
         {
             rb.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
             animator.SetTrigger("Jump");
@@ -130,7 +130,7 @@ public class Player : MonoBehaviour
     
     void CheckAttack()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetMouseButtonDown(0))
         {
             if (whichAttackAnim > 2)
             {
