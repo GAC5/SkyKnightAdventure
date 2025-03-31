@@ -1,57 +1,50 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.VFX;
 
-public class DamageDetector : MonoBehaviour
+public class NewBehaviourScript : MonoBehaviour
 {
+    [SerializeField] Renderer renderer;
     [SerializeField] Animator animator;
-    [SerializeField] SpriteRenderer renderer;
-    [SerializeField] int health = 3;
-    [SerializeField] float lastYPos;
-    private int triggered;
+    [SerializeField] int healthValue;
+    [SerializeField] int attackValue;
+    [SerializeField] bool enemyDead;
+   
 
+    // Start is called before the first frame update
     void Start()
     {
-        lastYPos = transform.position.y;
+ 
     }
 
-    private void FixedUpdate()
+    // Update is called once per frame
+    void Update()
     {
-        HealthUpdate();
+        CheckForEnemyDead();
+        
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("PlayerStrike"))
         {
-            //PROBLEM: Trigger called twice.
-            //SOLUTION: if/else statement checks how many times trigger is called, if triggered more than once, no health is deducted.
-            triggered++;
-            if (triggered == 1)
+            if (healthValue > 1)
             {
-                health--;
+                healthValue--;
             }
-            else
+            else if (healthValue <= 1)
             {
-                triggered = 0;
+                healthValue--;
+                enemyDead = true;
             }
-
         }
     }
 
-    void HealthUpdate()
+    private void CheckForEnemyDead()
     {
-        if (health != animator.GetInteger("Health"))
+        if (enemyDead == true)
         {
-            animator.SetTrigger("Hurt");
+            Destroy(gameObject);
         }
-        animator.SetInteger("Health", health);
-    }
-
-    void Death()
-    {
-        Destroy(gameObject);
     }
 }
