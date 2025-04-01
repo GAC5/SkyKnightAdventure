@@ -76,7 +76,7 @@ public class Player : MonoBehaviour
     {
         float leftRight = Input.GetAxis("Horizontal");
         transform.Translate(leftRight * Time.deltaTime * speed, 0, 0);
-        if ((Input.GetKey(KeyCode.A)) || (Input.GetKey(KeyCode.D)))
+        if ((Input.GetKey(KeyCode.A)) || (Input.GetKey(KeyCode.LeftArrow) || (Input.GetKey(KeyCode.D) || (Input.GetKey(KeyCode.RightArrow)))))
         {
             animator.SetBool("Moving", true);
         }
