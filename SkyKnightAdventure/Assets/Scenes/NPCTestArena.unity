@@ -310,6 +310,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 030b0f6e00dbb8f4b82ff3138012ecab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &566447274 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1885998292793438438, guid: 1c57bee82ec3ab14abd99e582e8c171a, type: 3}
+  m_PrefabInstance: {fileID: 8312893099097536169}
+  m_PrefabAsset: {fileID: 0}
 --- !u!212 &767681449 stripped
 SpriteRenderer:
   m_CorrespondingSourceObject: {fileID: 3271005571655430365, guid: 14bb0d721f8fb7140b46dfe780e1da90, type: 3}
@@ -880,10 +885,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   renderer: {fileID: 1895473428}
-  animator: {fileID: 0}
+  animator: {fileID: 1895473424}
+  player: {fileID: 566447274}
   healthValue: 3
   attackValue: 1
-  enemyDead: 0
+  detectionDistance: 5
 --- !u!50 &1895473426
 Rigidbody2D:
   serializedVersion: 4
@@ -943,7 +949,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.0044718087, y: 0.64714783}
+  m_Offset: {x: -0.0044718087, y: 0.6527841}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0}
@@ -954,7 +960,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.6324622, y: 1.1869708}
+  m_Size: {x: 0.6324622, y: 1.1756983}
   m_EdgeRadius: 0
 --- !u!212 &1895473428
 SpriteRenderer:
@@ -1134,6 +1140,10 @@ PrefabInstance:
     - target: {fileID: 2049608561476127487, guid: 14bb0d721f8fb7140b46dfe780e1da90, type: 3}
       propertyPath: m_Name
       value: TrialBanditEnemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 2049608561476127487, guid: 14bb0d721f8fb7140b46dfe780e1da90, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2049608561476127487, guid: 14bb0d721f8fb7140b46dfe780e1da90, type: 3}
       propertyPath: m_TagString
@@ -1398,11 +1408,11 @@ PrefabInstance:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 1583083840}
+  - {fileID: 1344512316}
+  - {fileID: 1659928677}
   - {fileID: 519420032}
   - {fileID: 2870915555593201718}
   - {fileID: 8312893099097536169}
-  - {fileID: 253645700377878362}
-  - {fileID: 1344512316}
-  - {fileID: 1659928677}
-  - {fileID: 1583083840}
   - {fileID: 1895473429}
+  - {fileID: 253645700377878362}

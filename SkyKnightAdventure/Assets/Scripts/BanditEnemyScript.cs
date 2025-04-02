@@ -6,9 +6,10 @@ public class NewBehaviourScript : MonoBehaviour
 {
     [SerializeField] Renderer renderer;
     [SerializeField] Animator animator;
+    [SerializeField] Transform player;
     [SerializeField] int healthValue;
     [SerializeField] int attackValue;
-    [SerializeField] bool enemyDead;
+    [SerializeField] float detectionDistance;
    
 
     // Start is called before the first frame update
@@ -20,8 +21,15 @@ public class NewBehaviourScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        CheckForEnemyDead();
-        
+        PlayerDetect();
+    }
+
+    private void PlayerDetect()
+    {
+        if (Mathf.Abs(transform.position.x - player.position.x) <= detectionDistance)
+        {
+            
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -30,21 +38,20 @@ public class NewBehaviourScript : MonoBehaviour
         {
             if (healthValue > 1)
             {
-                healthValue--;
+                animator.SetTrigger("isTakingDamage");
+                healthValue--; 
             }
             else if (healthValue <= 1)
             {
                 healthValue--;
-                enemyDead = true;
+                animator.SetTrigger("enemyDead");
             }
         }
     }
 
-    private void CheckForEnemyDead()
+    private void EnemyDead()
     {
-        if (enemyDead == true)
-        {
-            Destroy(gameObject);
-        }
+        Destroy(gameObject);
     }
+
 }
