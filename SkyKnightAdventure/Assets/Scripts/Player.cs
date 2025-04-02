@@ -118,11 +118,11 @@ public class Player : MonoBehaviour
     }
     void SpriteFlip()
     {
-        if ((Input.GetKeyDown(KeyCode.A)) || (Input.GetKeyDown(KeyCode.LeftArrow)))
+        if ((Input.GetKey(KeyCode.A)) || (Input.GetKey(KeyCode.LeftArrow)))
         {
             renderer.flipX = true;
         }
-        if ((Input.GetKeyDown(KeyCode.LeftArrow)) || (Input.GetKeyDown(KeyCode.D)))
+        if ((Input.GetKey(KeyCode.RightArrow)) || (Input.GetKey(KeyCode.D)))
         {
             renderer.flipX = false;
         }
