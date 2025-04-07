@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 using UnityEngine.SceneManagement;
+using UnityEngine.VFX;
 
 public class Player : MonoBehaviour
 {
@@ -16,6 +17,7 @@ public class Player : MonoBehaviour
     [SerializeField] SpriteRenderer renderer;
     [SerializeField] float lastYPos;
     [SerializeField] int whichAttackAnim = 0;
+    [SerializeField] Transform raycastOrigin;
     public int health = 3;
     public Animator animator;
     public bool attacking;
@@ -49,6 +51,7 @@ public class Player : MonoBehaviour
         {
             CheckForFalling();
         }
+        grounded = animator.GetBool("Grounded");
     }
 
     void SwordBoxMove()
@@ -101,9 +104,8 @@ public class Player : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if(collision.transform.CompareTag("Ground"))
+        if (collision.transform.CompareTag("Ground"))
         {
-            grounded = true;
             animator.SetBool("Grounded", true);
         }
     }
@@ -112,10 +114,10 @@ public class Player : MonoBehaviour
     {
         if (collision.transform.CompareTag("Ground"))
         {
-            grounded = false;
             animator.SetBool("Grounded", false);
         }
     }
+
     void SpriteFlip()
     {
         if ((Input.GetKey(KeyCode.A)) || (Input.GetKey(KeyCode.LeftArrow)))
