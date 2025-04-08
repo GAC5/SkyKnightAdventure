@@ -14,19 +14,23 @@ public class NewBehaviourScript : MonoBehaviour
     [SerializeField] float detectionDistance;
     [SerializeField] float attackRange;
     [SerializeField] float speed;
+    [SerializeField] float movementThreshold = 0.01f;
+    private float enemyLastXPosition;
+    private bool wasMoving;
 
    
 
     // Start is called before the first frame update
     void Start()
     {
- 
+        enemyLastXPosition = transform.position.x;
     }
 
     // Update is called once per frame
     void Update()
     {
         PlayerDetect();
+        //CheckForMove();
     }
 
     //   transform.position = Vector2.MoveTowards(transform.position, player.position, speed * Time.deltaTime);
@@ -40,7 +44,7 @@ public class NewBehaviourScript : MonoBehaviour
         else if (distanceToPlayer <= detectionDistance && distanceToPlayer <= attackRange)
         {
             // attack code to be added here
-            Debug.Log("attacked player");
+            
         }
         else
         {
@@ -54,7 +58,39 @@ public class NewBehaviourScript : MonoBehaviour
     {
         Vector2 direction = (player.position - transform.position).normalized;
         rigidbody.velocity = new Vector2(direction.x * speed, rigidbody.velocity.y);
+        CheckForMove();
+        
     }
+
+    private void CheckForMove()
+    {
+        float enemyMovement = transform.position.x - enemyLastXPosition;
+
+        bool isMoving = Mathf.Abs(enemyMovement) > movementThreshold;
+
+        if (isMoving != wasMoving)
+        {
+            animator.SetTrigger("enemyMoving");
+            wasMoving = isMoving;
+        }
+
+        if (isMoving)
+        {
+            if (enemyMovement < 0)
+            {
+                transform.localScale = new Vector3(1.65f, 1.65f, 1.65f);
+            }
+            else if (enemyMovement > 0)
+            {
+                transform.localScale = new Vector3(-1.65f, 1.65f, 1.65f);
+            }
+        }
+
+        enemyLastXPosition = transform.position.x;
+    }
+
+
+
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
