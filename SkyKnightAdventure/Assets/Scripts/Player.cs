@@ -40,7 +40,7 @@ public class Player : MonoBehaviour
             CheckAttack();
             SwordBoxMove();
         }
-        HealthUpdate();
+        //HealthUpdate();
     }
 
     private void FixedUpdate()
@@ -142,7 +142,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    void HealthUpdate()
+    /*void HealthUpdate()
     {
         if (health != animator.GetInteger("Health"))
         {
@@ -150,6 +150,19 @@ public class Player : MonoBehaviour
         }
         animator.SetInteger("Health", health);
         if (Input.GetKeyDown(KeyCode.K))
+        {
+            health--;
+        }
+    }*/
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (health != animator.GetInteger("Health"))
+        {
+            animator.SetTrigger("Hurt");
+        }
+        animator.SetInteger("Health", health);
+        if (collision.CompareTag("EnemyStrike"))
         {
             health--;
         }

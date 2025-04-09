@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -12,7 +13,10 @@ public class NewBehaviourScript : MonoBehaviour
     [SerializeField] int healthValue;
     [SerializeField] int attackValue;
     [SerializeField] float detectionDistance;
+    private float distanceToPlayerX;
+    private float distanceToPlayerY;
     [SerializeField] float attackRange;
+    [SerializeField] float verticalAttackThreshold;
     [SerializeField] float speed;
     [SerializeField] float movementThreshold = 0.01f;
     private float enemyLastXPosition;
@@ -36,14 +40,14 @@ public class NewBehaviourScript : MonoBehaviour
     //   transform.position = Vector2.MoveTowards(transform.position, player.position, speed * Time.deltaTime);
     private void PlayerDetect()
     {
-        float distanceToPlayer = Mathf.Abs(transform.position.x - player.position.x);
-        if (distanceToPlayer <= detectionDistance && distanceToPlayer > attackRange)
+        distanceToPlayerX = Mathf.Abs(transform.position.x - player.position.x);
+        if (distanceToPlayerX <= detectionDistance && distanceToPlayerX > attackRange)
         {
             MoveTowardsPlayer();
         }
-        else if (distanceToPlayer <= detectionDistance && distanceToPlayer <= attackRange)
+        else if (distanceToPlayerX <= detectionDistance && distanceToPlayerX <= attackRange)
         {
-            // attack code to be added here
+            EnemyAttack();
             
         }
         else
@@ -89,7 +93,20 @@ public class NewBehaviourScript : MonoBehaviour
         enemyLastXPosition = transform.position.x;
     }
 
+    private void EnemyAttack()
+    {
+        distanceToPlayerY = Mathf.Abs(transform.position.y - player.position.y);
+        if (distanceToPlayerX <= attackRange)
+        {
+            if (distanceToPlayerY <= verticalAttackThreshold)
+            {
+                rigidbody.velocity = new Vector2(0, rigidbody.velocity.y);
+                animator.SetTrigger("enemyAttack");
+            }
+        }
 
+       
+    }
 
 
     private void OnTriggerEnter2D(Collider2D collision)
