@@ -40,7 +40,6 @@ public class Player : MonoBehaviour
             CheckMovement();
             SpriteFlip();
             CheckAttack();
-            SwordBoxMove();
         }
         HealthUpdate();
     }
@@ -54,21 +53,9 @@ public class Player : MonoBehaviour
         grounded = animator.GetBool("Grounded");
     }
 
-    void SwordBoxMove()
-    {
-        if (renderer.flipX)
-        {
-            swordBox.transform.position = new Vector2(transform.position.x -1, swordBox.transform.position.y);
-        }
-        else
-        {
-            swordBox.transform.position = new Vector2(transform.position.x + 1, swordBox.transform.position.y);
-        }
-    }
-
     void CheckForJump ()
     {
-        if (grounded && (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.W)))
+        if (grounded && ((Input.GetKeyDown(KeyCode.Space))))
         {
             rb.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
             animator.SetTrigger("Jump");
@@ -130,11 +117,11 @@ public class Player : MonoBehaviour
     {
         if ((Input.GetKey(KeyCode.A)) || (Input.GetKey(KeyCode.LeftArrow)))
         {
-            renderer.flipX = true;
+            transform.localScale = new Vector2 (-1.5f, 1.5f);
         }
         if ((Input.GetKey(KeyCode.RightArrow)) || (Input.GetKey(KeyCode.D)))
         {
-            renderer.flipX = false;
+            transform.localScale = new Vector2(1.5f, 1.5f);
         }
     }
     

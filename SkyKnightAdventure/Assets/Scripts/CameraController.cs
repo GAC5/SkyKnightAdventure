@@ -9,7 +9,7 @@ public class CameraController : MonoBehaviour
     [SerializeField] float smoothTime;
     [SerializeField] bool lookAtPlayer;
     [SerializeField] int lowerLimit = -2;
-    
+    [SerializeField] Camera camera;
     void Update()
     {
         if (player.position.y >= lowerLimit)
@@ -22,6 +22,5 @@ public class CameraController : MonoBehaviour
                 transform.LookAt(player);
             }
         }
-        
     }
 }
