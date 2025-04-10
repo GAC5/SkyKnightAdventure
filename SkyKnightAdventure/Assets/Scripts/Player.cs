@@ -165,6 +165,7 @@ public class Player : MonoBehaviour
         if (collision.CompareTag("EnemyStrike"))
         {
             health--;
+            animator.SetTrigger("Hurt");
         }
     }
 

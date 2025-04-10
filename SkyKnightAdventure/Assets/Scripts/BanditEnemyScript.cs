@@ -12,15 +12,19 @@ public class NewBehaviourScript : MonoBehaviour
     [SerializeField] Transform player;
     [SerializeField] int healthValue;
     [SerializeField] int attackValue;
-    [SerializeField] float detectionDistance;
+    [SerializeField] float detectionDistanceX;
+    [SerializeField] float detectionDistanceY;
     private float distanceToPlayerX;
     private float distanceToPlayerY;
     [SerializeField] float attackRange;
     [SerializeField] float verticalAttackThreshold;
     [SerializeField] float speed;
     [SerializeField] float movementThreshold = 0.01f;
+    [SerializeField] float attackCooldown;
     private float enemyLastXPosition;
     private bool wasMoving;
+    private float lastAttackTime;
+
 
    
 
@@ -41,11 +45,12 @@ public class NewBehaviourScript : MonoBehaviour
     private void PlayerDetect()
     {
         distanceToPlayerX = Mathf.Abs(transform.position.x - player.position.x);
-        if (distanceToPlayerX <= detectionDistance && distanceToPlayerX > attackRange)
+        distanceToPlayerY = Mathf.Abs(transform.position.y - player.position.y);
+        if ((distanceToPlayerX <= detectionDistanceX) && (distanceToPlayerY <= detectionDistanceY) && (distanceToPlayerX > attackRange))
         {
             MoveTowardsPlayer();
         }
-        else if (distanceToPlayerX <= detectionDistance && distanceToPlayerX <= attackRange)
+        else if ((distanceToPlayerX <= detectionDistanceX) && (distanceToPlayerY <= detectionDistanceY) && (distanceToPlayerX <= attackRange))
         {
             EnemyAttack();
             
@@ -95,17 +100,15 @@ public class NewBehaviourScript : MonoBehaviour
 
     private void EnemyAttack()
     {
-        distanceToPlayerY = Mathf.Abs(transform.position.y - player.position.y);
-        if (distanceToPlayerX <= attackRange)
+        if ((distanceToPlayerX <= attackRange) && (distanceToPlayerY <= verticalAttackThreshold))
         {
-            if (distanceToPlayerY <= verticalAttackThreshold)
+            if (Time.time >= lastAttackTime + attackCooldown)
             {
                 rigidbody.velocity = new Vector2(0, rigidbody.velocity.y);
                 animator.SetTrigger("enemyAttack");
+                lastAttackTime = Time.time;
             }
         }
-
-       
     }
 
 
@@ -124,6 +127,11 @@ public class NewBehaviourScript : MonoBehaviour
                 animator.SetTrigger("enemyDead");
             }
         }
+    }
+
+    private void AnimationController()
+    {
+
     }
 
     private void EnemyDead()
