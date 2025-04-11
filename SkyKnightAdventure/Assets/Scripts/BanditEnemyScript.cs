@@ -22,7 +22,7 @@ public class NewBehaviourScript : MonoBehaviour
     [SerializeField] float movementThreshold = 0.01f;
     [SerializeField] float attackCooldown;
     private float enemyLastXPosition;
-    private bool wasMoving;
+    private bool runAnimationController;
     private float lastAttackTime;
 
 
@@ -32,6 +32,7 @@ public class NewBehaviourScript : MonoBehaviour
     void Start()
     {
         enemyLastXPosition = transform.position.x;
+
     }
 
     // Update is called once per frame
@@ -77,10 +78,10 @@ public class NewBehaviourScript : MonoBehaviour
 
         bool isMoving = Mathf.Abs(enemyMovement) > movementThreshold;
 
-        if (isMoving != wasMoving)
+        if (isMoving == true && animator.GetBool("runAnimationController") == false)
         {
             animator.SetTrigger("enemyMoving");
-            wasMoving = isMoving;
+            animator.SetBool("runAnimationController", true);
         }
 
         if (isMoving)
@@ -131,7 +132,10 @@ public class NewBehaviourScript : MonoBehaviour
 
     private void AnimationController()
     {
-
+        if (animator.GetBool("runAnimationController") == true) 
+        {
+            animator.SetBool("runAnimationController", false);
+        }
     }
 
     private void EnemyDead()

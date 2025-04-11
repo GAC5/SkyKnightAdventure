@@ -1020,7 +1020,7 @@ MonoBehaviour:
   player: {fileID: 566447274}
   healthValue: 3
   attackValue: 1
-  detectionDistanceX: 8
+  detectionDistanceX: 6
   detectionDistanceY: 6
   attackRange: 1
   verticalAttackThreshold: 2
