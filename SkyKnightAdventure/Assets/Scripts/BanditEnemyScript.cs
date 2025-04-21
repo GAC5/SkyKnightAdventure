@@ -9,6 +9,7 @@ public class NewBehaviourScript : MonoBehaviour
     [SerializeField] Renderer renderer;
     [SerializeField] Animator animator;
     [SerializeField] Rigidbody2D rigidbody;
+    [SerializeField] Collider2D collider;
     [SerializeField] Transform player;
     [SerializeField] int healthValue;
     [SerializeField] int attackValue;
@@ -22,8 +23,8 @@ public class NewBehaviourScript : MonoBehaviour
     [SerializeField] float movementThreshold = 0.01f;
     [SerializeField] float attackCooldown;
     private float enemyLastXPosition;
-    private bool runAnimationController;
     private float lastAttackTime;
+    private bool enemyDead;
 
 
    
@@ -38,8 +39,17 @@ public class NewBehaviourScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        PlayerDetect();
-        //CheckForMove();
+        if (enemyDead == false)
+        {
+            PlayerDetect();
+        }
+        else
+        {
+            rigidbody.velocity = new Vector2(0, rigidbody.velocity.y);
+            rigidbody.gravityScale = 0;
+            collider.enabled = false;
+           
+        }
     }
 
     //   transform.position = Vector2.MoveTowards(transform.position, player.position, speed * Time.deltaTime);
@@ -67,7 +77,16 @@ public class NewBehaviourScript : MonoBehaviour
     private void MoveTowardsPlayer()
     {
         Vector2 direction = (player.position - transform.position).normalized;
-        rigidbody.velocity = new Vector2(direction.x * speed, rigidbody.velocity.y);
+
+        if (animator.GetBool("isStationary") == false)
+        {
+            rigidbody.velocity = new Vector2(direction.x * speed, rigidbody.velocity.y);
+        }
+        else
+        {
+            rigidbody.velocity = new Vector2(0, rigidbody.velocity.y);
+        }
+
         CheckForMove();
         
     }
@@ -105,7 +124,7 @@ public class NewBehaviourScript : MonoBehaviour
         {
             if (Time.time >= lastAttackTime + attackCooldown)
             {
-                rigidbody.velocity = new Vector2(0, rigidbody.velocity.y);
+                animator.SetBool("isStationary", true);
                 animator.SetTrigger("enemyAttack");
                 lastAttackTime = Time.time;
             }
@@ -115,26 +134,38 @@ public class NewBehaviourScript : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("PlayerStrike"))
+        if (enemyDead == false)
         {
-            if (healthValue > 1)
+            if (collision.CompareTag("PlayerStrike"))
             {
-                animator.SetTrigger("isTakingDamage");
-                healthValue--; 
-            }
-            else if (healthValue <= 1)
-            {
-                healthValue--;
-                animator.SetTrigger("enemyDead");
+                if (healthValue > 1)
+                {
+                    animator.SetTrigger("isTakingDamage");
+                    healthValue--;
+                }
+                else if (healthValue <= 1)
+                {
+                    healthValue--;
+                    animator.SetTrigger("enemyDead");
+                    enemyDead = true;
+                }
             }
         }
     }
 
-    private void AnimationController()
+    private void AnimationRunController()
     {
         if (animator.GetBool("runAnimationController") == true) 
         {
             animator.SetBool("runAnimationController", false);
+        }
+    }
+
+    private void AnimationStationaryController()
+    {
+        if (animator.GetBool("isStationary") == true)
+        {
+            animator.SetBool("isStationary", false);
         }
     }
 
