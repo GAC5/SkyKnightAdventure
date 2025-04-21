@@ -64,10 +64,10 @@ public class Player : MonoBehaviour
 
     void CheckMovement()
     {
-        float leftRight = Input.GetAxis("Horizontal");
-        transform.Translate(leftRight * Time.deltaTime * speed, 0, 0);
-        if ((Input.GetKey(KeyCode.A)) || (Input.GetKey(KeyCode.LeftArrow) || (Input.GetKey(KeyCode.D) || (Input.GetKey(KeyCode.RightArrow)))))
+        if ((Input.GetKey(KeyCode.A)) || (Input.GetKey(KeyCode.D)))
         {
+            float leftRight = Input.GetAxis("Horizontal");
+            transform.Translate(leftRight * Time.deltaTime * speed, 0, 0);
             animator.SetBool("Moving", true);
         }
         else
@@ -115,11 +115,11 @@ public class Player : MonoBehaviour
 
     void SpriteFlip()
     {
-        if ((Input.GetKey(KeyCode.A)) || (Input.GetKey(KeyCode.LeftArrow)))
+        if ((Input.GetKey(KeyCode.A)))
         {
             transform.localScale = new Vector2 (-1.5f, 1.5f);
         }
-        if ((Input.GetKey(KeyCode.RightArrow)) || (Input.GetKey(KeyCode.D)))
+        if ((Input.GetKey(KeyCode.D)))
         {
             transform.localScale = new Vector2(1.5f, 1.5f);
         }
