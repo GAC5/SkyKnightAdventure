@@ -1,10 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Security.Cryptography;
 using UnityEngine;
-using UnityEngine.UIElements;
 
-public class NewBehaviourScript : MonoBehaviour
+public class HeavyBanditEnemyScript : MonoBehaviour
 {
     [SerializeField] Renderer renderer;
     [SerializeField] Animator animator;
@@ -25,9 +23,6 @@ public class NewBehaviourScript : MonoBehaviour
     private float enemyLastXPosition;
     private float lastAttackTime;
     private bool enemyDead;
-
-
-   
 
     // Start is called before the first frame update
     void Start()
@@ -52,11 +47,10 @@ public class NewBehaviourScript : MonoBehaviour
             rigidbody.velocity = new Vector2(0, rigidbody.velocity.y);
             rigidbody.gravityScale = 0;
             collider.enabled = false;
-           
+
         }
     }
 
-    //   transform.position = Vector2.MoveTowards(transform.position, player.position, speed * Time.deltaTime);
     private void PlayerDetect()
     {
         distanceToPlayerX = Mathf.Abs(transform.position.x - player.transform.position.x);
@@ -67,8 +61,8 @@ public class NewBehaviourScript : MonoBehaviour
         }
         else if ((distanceToPlayerX <= detectionDistanceX) && (distanceToPlayerY <= detectionDistanceY) && (distanceToPlayerX <= attackRange))
         {
-            EnemyAttack();
-            
+            //EnemyAttack();
+
         }
         else
         {
@@ -92,7 +86,7 @@ public class NewBehaviourScript : MonoBehaviour
         }
 
         CheckForMove();
-        
+
     }
 
     private void CheckForMove()
@@ -111,55 +105,23 @@ public class NewBehaviourScript : MonoBehaviour
         {
             if (enemyMovement < 0)
             {
-                transform.localScale = new Vector3(1.65f, 1.65f, 1.65f);
+                transform.localScale = new Vector3(2f, 2f, 2f);
             }
             else if (enemyMovement > 0)
             {
-                transform.localScale = new Vector3(-1.65f, 1.65f, 1.65f);
+                transform.localScale = new Vector3(-2f, 2f, 2f);
             }
         }
 
         enemyLastXPosition = transform.position.x;
     }
 
-    private void EnemyAttack()
-    {
-        if ((distanceToPlayerX <= attackRange) && (distanceToPlayerY <= verticalAttackThreshold))
-        {
-            if (Time.time >= lastAttackTime + attackCooldown)
-            {
-                animator.SetBool("isStationary", true);
-                animator.SetTrigger("enemyAttack");
-                lastAttackTime = Time.time;
-            }
-        }
-    }
 
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (enemyDead == false)
-        {
-            if (collision.CompareTag("PlayerStrike"))
-            {
-                if (healthValue > 1)
-                {
-                    animator.SetTrigger("isTakingDamage");
-                    healthValue--;
-                }
-                else if (healthValue <= 1)
-                {
-                    healthValue--;
-                    animator.SetTrigger("enemyDead");
-                    enemyDead = true;
-                }
-            }
-        }
-    }
 
     private void AnimationRunController()
     {
-        if (animator.GetBool("runAnimationController") == true) 
+        if (animator.GetBool("runAnimationController") == true)
         {
             animator.SetBool("runAnimationController", false);
         }
@@ -191,3 +153,5 @@ public class NewBehaviourScript : MonoBehaviour
     }
 
 }
+
+
