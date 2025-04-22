@@ -111,6 +111,16 @@ public class Player : MonoBehaviour
         {
             health = 0;
         }
+        
+        if (collision.CompareTag("Finish"))
+        {
+            int currentScene = SceneManager.GetActiveScene().buildIndex;
+            int totalScenes = SceneManager.sceneCountInBuildSettings;
+            if (currentScene == totalScenes - 1)
+            {
+            }
+            SceneManager.LoadScene(currentScene + 1);
+        }
     }
 
     void SpriteFlip()
