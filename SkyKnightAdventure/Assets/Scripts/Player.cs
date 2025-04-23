@@ -18,6 +18,7 @@ public class Player : MonoBehaviour
     [SerializeField] float lastYPos;
     [SerializeField] int whichAttackAnim = 0;
     [SerializeField] Transform raycastOrigin;
+    [SerializeField] GameObject gameOverCanvas;
     public int health = 3;
     public Animator animator;
     public bool attacking;
@@ -41,6 +42,7 @@ public class Player : MonoBehaviour
             SpriteFlip();
             CheckAttack();
         }
+        HealthMonitor();
         HealthUpdate();
     }
 
@@ -51,6 +53,14 @@ public class Player : MonoBehaviour
             CheckForFalling();
         }
         grounded = animator.GetBool("Grounded");
+    }
+
+    void HealthMonitor()
+    {
+        if (health < 1)
+        {
+            gameOverCanvas.SetActive(true);
+        }
     }
 
     void CheckForJump ()
