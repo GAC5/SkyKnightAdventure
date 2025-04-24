@@ -19,6 +19,9 @@ public class Player : MonoBehaviour
     [SerializeField] int whichAttackAnim = 0;
     [SerializeField] Transform raycastOrigin;
     [SerializeField] GameObject gameOverCanvas;
+    [SerializeField] GameObject heart3;
+    [SerializeField] GameObject heart2;
+    [SerializeField] GameObject heart1;
     public int health = 3;
     public Animator animator;
     public bool attacking;
@@ -42,7 +45,6 @@ public class Player : MonoBehaviour
             SpriteFlip();
             CheckAttack();
         }
-        HealthMonitor();
         HealthUpdate();
     }
 
@@ -53,14 +55,6 @@ public class Player : MonoBehaviour
             CheckForFalling();
         }
         grounded = animator.GetBool("Grounded");
-    }
-
-    void HealthMonitor()
-    {
-        if (health < 1)
-        {
-            gameOverCanvas.SetActive(true);
-        }
     }
 
     void CheckForJump ()
@@ -170,6 +164,26 @@ public class Player : MonoBehaviour
         {
             health--;
         }
+        if (health < 1)
+        {
+            gameOverCanvas.SetActive(true);
+        }
+        switch (health)
+        {
+            case 2:
+                heart3.SetActive(false);
+                break;
+            case 1:
+                heart3.SetActive(false);
+                heart2.SetActive(false);
+                break;
+            case < 1:
+                heart3.SetActive(false);
+                heart2.SetActive(false);
+                heart1.SetActive(false);
+                break;
+        }
+
     }
 
     void Restart()
