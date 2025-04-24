@@ -11,18 +11,23 @@ public class NewBehaviourScript : MonoBehaviour
     [SerializeField] Rigidbody2D rigidbody;
     [SerializeField] Collider2D collider;
     private GameObject player;
+
     [SerializeField] int healthValue;
     [SerializeField] int attackValue;
     [SerializeField] float detectionDistanceX;
     [SerializeField] float detectionDistanceY;
-    private float distanceToPlayerX;
-    private float distanceToPlayerY;
     [SerializeField] float attackRange;
     [SerializeField] float verticalAttackThreshold;
     [SerializeField] float speed;
     [SerializeField] float movementThreshold = 0.01f;
     [SerializeField] float attackCooldown;
+    [SerializeField] bool roamingActivated;
+    [SerializeField] float roamingRange;
+    [SerializeField] float roamingSpeed;
+    private float distanceToPlayerX;
+    private float distanceToPlayerY;
     private float enemyLastXPosition;
+    private Vector3 originalScale;
     private float lastAttackTime;
     private bool enemyDead;
 
@@ -38,6 +43,7 @@ public class NewBehaviourScript : MonoBehaviour
             player.GetComponent<Transform>();
         }
         enemyLastXPosition = transform.position.x;
+        originalScale = transform.localScale;
     }
 
     // Update is called once per frame
@@ -73,9 +79,17 @@ public class NewBehaviourScript : MonoBehaviour
         else
         {
             rigidbody.velocity = new Vector2(0, rigidbody.velocity.y);
-            // this is the section where no player is detected
-            //later, a passive animation or walk could be added to make enemies more dynamic
+            if (roamingActivated)
+            {
+                idleWalk();
+            }
+            
         }
+    }
+
+    private void idleWalk()
+    {
+
     }
 
     private void MoveTowardsPlayer()
@@ -109,13 +123,14 @@ public class NewBehaviourScript : MonoBehaviour
 
         if (isMoving)
         {
+            
             if (enemyMovement < 0)
             {
-                transform.localScale = new Vector3(1.65f, 1.65f, 1.65f);
+                transform.localScale = new Vector3(Mathf.Abs(originalScale.x), originalScale.y, originalScale.z);
             }
             else if (enemyMovement > 0)
             {
-                transform.localScale = new Vector3(-1.65f, 1.65f, 1.65f);
+                transform.localScale = new Vector3(-Mathf.Abs(originalScale.x), originalScale.y, originalScale.z);
             }
         }
 
@@ -134,7 +149,6 @@ public class NewBehaviourScript : MonoBehaviour
             }
         }
     }
-
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
