@@ -324,11 +324,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7062691848174565331, guid: fc672bcf74f805a4fabb22604e9530e2, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3.32
+      value: 2.53
       objectReference: {fileID: 0}
     - target: {fileID: 7062691848174565331, guid: fc672bcf74f805a4fabb22604e9530e2, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 4.98
+      value: 4.5
       objectReference: {fileID: 0}
     - target: {fileID: 7062691848174565331, guid: fc672bcf74f805a4fabb22604e9530e2, type: 3}
       propertyPath: m_LocalPosition.z
@@ -363,8 +363,20 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7270153591713288415, guid: fc672bcf74f805a4fabb22604e9530e2, type: 3}
+      propertyPath: roamingRange
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7270153591713288415, guid: fc672bcf74f805a4fabb22604e9530e2, type: 3}
+      propertyPath: roamingSpeed
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7270153591713288415, guid: fc672bcf74f805a4fabb22604e9530e2, type: 3}
+      propertyPath: roamLeftStart
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7270153591713288415, guid: fc672bcf74f805a4fabb22604e9530e2, type: 3}
       propertyPath: roamingActivated
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1271,6 +1283,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 66813906608794399, guid: 1c57bee82ec3ab14abd99e582e8c171a, type: 3}
+      propertyPath: m_GravityScale
+      value: 1.2
+      objectReference: {fileID: 0}
     - target: {fileID: 862763326005379507, guid: 1c57bee82ec3ab14abd99e582e8c171a, type: 3}
       propertyPath: m_Name
       value: Hero
@@ -1297,11 +1313,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1885998292793438438, guid: 1c57bee82ec3ab14abd99e582e8c171a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -3
+      value: -5.74
       objectReference: {fileID: 0}
     - target: {fileID: 1885998292793438438, guid: 1c57bee82ec3ab14abd99e582e8c171a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 4.9
+      value: 0.52
       objectReference: {fileID: 0}
     - target: {fileID: 1885998292793438438, guid: 1c57bee82ec3ab14abd99e582e8c171a, type: 3}
       propertyPath: m_LocalPosition.z

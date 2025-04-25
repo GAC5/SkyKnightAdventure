@@ -24,15 +24,19 @@ public class NewBehaviourScript : MonoBehaviour
     [SerializeField] bool roamingActivated;
     [SerializeField] float roamingRange;
     [SerializeField] float roamingSpeed;
+    [SerializeField] bool roamLeftStart;
     private float distanceToPlayerX;
     private float distanceToPlayerY;
     private float enemyLastXPosition;
     private Vector3 originalScale;
     private float lastAttackTime;
     private bool enemyDead;
+    private float leftRoamLimit;
+    private float rightRoamLimit;
+    private float startXPosition;
 
 
-   
+
 
     // Start is called before the first frame update
     void Start()
@@ -44,6 +48,7 @@ public class NewBehaviourScript : MonoBehaviour
         }
         enemyLastXPosition = transform.position.x;
         originalScale = transform.localScale;
+        startXPosition = transform.position.x;
     }
 
     // Update is called once per frame
@@ -89,7 +94,34 @@ public class NewBehaviourScript : MonoBehaviour
 
     private void idleWalk()
     {
+        leftRoamLimit = startXPosition - roamingRange;
+        rightRoamLimit = startXPosition + roamingRange;
 
+        if (roamLeftStart)
+        {
+            if (transform.position.x > leftRoamLimit)
+            {
+                rigidbody.velocity = new Vector2(-roamingSpeed, rigidbody.velocity.y);
+            }
+            else if (transform.position.x <= leftRoamLimit)
+            {
+                rigidbody.velocity = new Vector2(0, rigidbody.velocity.y);
+                roamLeftStart = false;
+            }
+        }
+        if (!roamLeftStart)
+        {
+            if (transform.position.x < rightRoamLimit)
+            {
+                rigidbody.velocity = new Vector2(roamingSpeed, rigidbody.velocity.y);
+            }
+            else if (transform.position.x >= rightRoamLimit)
+            {
+                rigidbody.velocity = new Vector2(0, rigidbody.velocity.y);
+                roamLeftStart = true;
+            }
+        }
+        CheckForMoveIdle();
     }
 
     private void MoveTowardsPlayer()
@@ -107,7 +139,7 @@ public class NewBehaviourScript : MonoBehaviour
 
         CheckForMove();
         
-    }
+    }       
 
     private void CheckForMove()
     {
@@ -124,6 +156,34 @@ public class NewBehaviourScript : MonoBehaviour
         if (isMoving)
         {
             
+            if (enemyMovement < 0)
+            {
+                transform.localScale = new Vector3(Mathf.Abs(originalScale.x), originalScale.y, originalScale.z);
+            }
+            else if (enemyMovement > 0)
+            {
+                transform.localScale = new Vector3(-Mathf.Abs(originalScale.x), originalScale.y, originalScale.z);
+            }
+        }
+
+        enemyLastXPosition = transform.position.x;
+    }
+
+    private void CheckForMoveIdle()
+    {
+        float enemyMovement = transform.position.x - enemyLastXPosition;
+
+        bool isMoving = Mathf.Abs(enemyMovement) > movementThreshold;
+
+        if (isMoving == true && animator.GetBool("runAnimationController") == false)
+        {
+            animator.SetTrigger("enemyIdle");
+            animator.SetBool("runAnimationController", true);
+        }
+
+        if (isMoving)
+        {
+
             if (enemyMovement < 0)
             {
                 transform.localScale = new Vector3(Mathf.Abs(originalScale.x), originalScale.y, originalScale.z);
