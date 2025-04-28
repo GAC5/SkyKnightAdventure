@@ -25,6 +25,9 @@ public class NewBehaviourScript : MonoBehaviour
     [SerializeField] float roamingRange;
     [SerializeField] float roamingSpeed;
     [SerializeField] bool roamLeftStart;
+    [SerializeField] bool roamWait;
+    [SerializeField] float minIdlePauseTime;
+    [SerializeField] float maxIdlePauseTime;
     private float distanceToPlayerX;
     private float distanceToPlayerY;
     private float enemyLastXPosition;
@@ -34,6 +37,7 @@ public class NewBehaviourScript : MonoBehaviour
     private float leftRoamLimit;
     private float rightRoamLimit;
     private float startXPosition;
+    private bool isPausing;
 
 
 
@@ -106,7 +110,17 @@ public class NewBehaviourScript : MonoBehaviour
             else if (transform.position.x <= leftRoamLimit)
             {
                 rigidbody.velocity = new Vector2(0, rigidbody.velocity.y);
-                roamLeftStart = false;
+                if (roamWait)
+                {
+                    if (!isPausing)
+                    {
+                        StartCoroutine(PauseAtLimit());
+                    }
+                }
+                else
+                {
+                    roamLeftStart = false;
+                }
             }
         }
         if (!roamLeftStart)
@@ -118,12 +132,38 @@ public class NewBehaviourScript : MonoBehaviour
             else if (transform.position.x >= rightRoamLimit)
             {
                 rigidbody.velocity = new Vector2(0, rigidbody.velocity.y);
-                roamLeftStart = true;
+                if (roamWait)
+                {
+                    if (!isPausing)
+                    {
+                        StartCoroutine(PauseAtLimit());
+                    }
+                }
+                else
+                {
+                    roamLeftStart = true;
+                }
             }
         }
         CheckForMoveIdle();
     }
 
+    private IEnumerator PauseAtLimit()
+    {
+        isPausing = true;
+        float waitTime = Random.Range(minIdlePauseTime, maxIdlePauseTime);
+        yield return new WaitForSeconds(waitTime);
+        if (roamLeftStart)
+        {
+            roamLeftStart = false;
+        }
+        else if (!roamLeftStart)
+        {
+            roamLeftStart = true;
+        }
+        isPausing = false;
+    }
+   
     private void MoveTowardsPlayer()
     {
         Vector2 direction = (player.transform.position - transform.position).normalized;
