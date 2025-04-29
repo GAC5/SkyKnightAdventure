@@ -1,57 +1,307 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
+using System.Security.Cryptography;
 using UnityEngine;
-using UnityEngine.VFX;
+using UnityEngine.UIElements;
 
-public class DamageDetector : MonoBehaviour
+public class NewBehaviourScript : MonoBehaviour
 {
+    [SerializeField] Renderer renderer;
     [SerializeField] Animator animator;
-    [SerializeField] SpriteRenderer renderer;
-    [SerializeField] int health = 3;
-    [SerializeField] float lastYPos;
-    private int triggered;
+    [SerializeField] Rigidbody2D rigidbody;
+    [SerializeField] Collider2D collider;
+    private GameObject player;
 
+    [SerializeField] int healthValue;
+    [SerializeField] int attackValue;
+    [SerializeField] float detectionDistanceX;
+    [SerializeField] float detectionDistanceY;
+    [SerializeField] float attackRange;
+    [SerializeField] float verticalAttackThreshold;
+    [SerializeField] float speed;
+    [SerializeField] float movementThreshold = 0.01f;
+    [SerializeField] float attackCooldown;
+    [SerializeField] bool roamingActivated;
+    [SerializeField] float roamingRange;
+    [SerializeField] float roamingSpeed;
+    [SerializeField] bool roamLeftStart;
+    [SerializeField] bool roamWait;
+    [SerializeField] float minIdlePauseTime;
+    [SerializeField] float maxIdlePauseTime;
+    private float distanceToPlayerX;
+    private float distanceToPlayerY;
+    private float enemyLastXPosition;
+    private Vector3 originalScale;
+    private float lastAttackTime;
+    private bool enemyDead;
+    private float leftRoamLimit;
+    private float rightRoamLimit;
+    private float startXPosition;
+    private bool isPausing;
+
+
+
+
+    // Start is called before the first frame update
     void Start()
     {
-        lastYPos = transform.position.y;
+        player = GameObject.FindWithTag("Player");
+        if (player != null)
+        {
+            player.GetComponent<Transform>();
+        }
+        enemyLastXPosition = transform.position.x;
+        originalScale = transform.localScale;
+        startXPosition = transform.position.x;
     }
 
-    private void FixedUpdate()
+    // Update is called once per frame
+    void Update()
     {
-        HealthUpdate();
+        if (enemyDead == false)
+        {
+            PlayerDetect();
+        }
+        else
+        {
+            rigidbody.velocity = new Vector2(0, rigidbody.velocity.y);
+            rigidbody.gravityScale = 0;
+            collider.enabled = false;
+           
+        }
+    }
+
+    //   transform.position = Vector2.MoveTowards(transform.position, player.position, speed * Time.deltaTime);
+    private void PlayerDetect()
+    {
+        distanceToPlayerX = Mathf.Abs(transform.position.x - player.transform.position.x);
+        distanceToPlayerY = Mathf.Abs(transform.position.y - player.transform.position.y);
+        if ((distanceToPlayerX <= detectionDistanceX) && (distanceToPlayerY <= detectionDistanceY) && (distanceToPlayerX > attackRange))
+        {
+            MoveTowardsPlayer();
+        }
+        else if ((distanceToPlayerX <= detectionDistanceX) && (distanceToPlayerY <= detectionDistanceY) && (distanceToPlayerX <= attackRange))
+        {
+            EnemyAttack();
+            
+        }
+        else
+        {
+            rigidbody.velocity = new Vector2(0, rigidbody.velocity.y);
+            if (roamingActivated)
+            {
+                idleWalk();
+            }
+            
+        }
+    }
+
+    private void idleWalk()
+    {
+        leftRoamLimit = startXPosition - roamingRange;
+        rightRoamLimit = startXPosition + roamingRange;
+
+        if (roamLeftStart)
+        {
+            if (transform.position.x > leftRoamLimit)
+            {
+                rigidbody.velocity = new Vector2(-roamingSpeed, rigidbody.velocity.y);
+            }
+            else if (transform.position.x <= leftRoamLimit)
+            {
+                rigidbody.velocity = new Vector2(0, rigidbody.velocity.y);
+                if (roamWait)
+                {
+                    if (!isPausing)
+                    {
+                        StartCoroutine(PauseAtLimit());
+                    }
+                }
+                else
+                {
+                    roamLeftStart = false;
+                }
+            }
+        }
+        if (!roamLeftStart)
+        {
+            if (transform.position.x < rightRoamLimit)
+            {
+                rigidbody.velocity = new Vector2(roamingSpeed, rigidbody.velocity.y);
+            }
+            else if (transform.position.x >= rightRoamLimit)
+            {
+                rigidbody.velocity = new Vector2(0, rigidbody.velocity.y);
+                if (roamWait)
+                {
+                    if (!isPausing)
+                    {
+                        StartCoroutine(PauseAtLimit());
+                    }
+                }
+                else
+                {
+                    roamLeftStart = true;
+                }
+            }
+        }
+        CheckForMoveIdle();
+    }
+
+    private IEnumerator PauseAtLimit()
+    {
+        isPausing = true;
+        float waitTime = Random.Range(minIdlePauseTime, maxIdlePauseTime);
+        yield return new WaitForSeconds(waitTime);
+        if (roamLeftStart)
+        {
+            roamLeftStart = false;
+        }
+        else if (!roamLeftStart)
+        {
+            roamLeftStart = true;
+        }
+        isPausing = false;
+    }
+   
+    private void MoveTowardsPlayer()
+    {
+        Vector2 direction = (player.transform.position - transform.position).normalized;
+
+        if (animator.GetBool("isStationary") == false)
+        {
+            rigidbody.velocity = new Vector2(direction.x * speed, rigidbody.velocity.y);
+        }
+        else
+        {
+            rigidbody.velocity = new Vector2(0, rigidbody.velocity.y);
+        }
+
+        CheckForMove();
+        
+    }       
+
+    private void CheckForMove()
+    {
+        float enemyMovement = transform.position.x - enemyLastXPosition;
+
+        bool isMoving = Mathf.Abs(enemyMovement) > movementThreshold;
+
+        if (isMoving == true && animator.GetBool("runAnimationController") == false)
+        {
+            animator.SetTrigger("enemyMoving");
+            animator.SetBool("runAnimationController", true);
+        }
+
+        if (isMoving)
+        {
+            
+            if (enemyMovement < 0)
+            {
+                transform.localScale = new Vector3(Mathf.Abs(originalScale.x), originalScale.y, originalScale.z);
+            }
+            else if (enemyMovement > 0)
+            {
+                transform.localScale = new Vector3(-Mathf.Abs(originalScale.x), originalScale.y, originalScale.z);
+            }
+        }
+
+        enemyLastXPosition = transform.position.x;
+    }
+
+    private void CheckForMoveIdle()
+    {
+        float enemyMovement = transform.position.x - enemyLastXPosition;
+
+        bool isMoving = Mathf.Abs(enemyMovement) > movementThreshold;
+
+        if (isMoving == true && animator.GetBool("runAnimationController") == false)
+        {
+            animator.SetTrigger("enemyIdle");
+            animator.SetBool("runAnimationController", true);
+        }
+
+        if (isMoving)
+        {
+
+            if (enemyMovement < 0)
+            {
+                transform.localScale = new Vector3(Mathf.Abs(originalScale.x), originalScale.y, originalScale.z);
+            }
+            else if (enemyMovement > 0)
+            {
+                transform.localScale = new Vector3(-Mathf.Abs(originalScale.x), originalScale.y, originalScale.z);
+            }
+        }
+
+        enemyLastXPosition = transform.position.x;
+    }
+
+    private void EnemyAttack()
+    {
+        if ((distanceToPlayerX <= attackRange) && (distanceToPlayerY <= verticalAttackThreshold))
+        {
+            if (Time.time >= lastAttackTime + attackCooldown)
+            {
+                animator.SetBool("isStationary", true);
+                animator.SetTrigger("enemyAttack");
+                lastAttackTime = Time.time;
+            }
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("PlayerStrike"))
+        if (enemyDead == false)
         {
-            //PROBLEM: Trigger called twice.
-            //SOLUTION: if/else statement checks how many times trigger is called, if triggered more than once, no health is deducted.
-            triggered++;
-            if (triggered == 1)
+            if (collision.CompareTag("PlayerStrike"))
             {
-                health--;
+                if (healthValue > 1)
+                {
+                    animator.SetTrigger("isTakingDamage");
+                    healthValue--;
+                }
+                else if (healthValue <= 1)
+                {
+                    healthValue--;
+                    animator.SetTrigger("enemyDead");
+                    enemyDead = true;
+                }
             }
-            else
-            {
-                triggered = 0;
-            }
-
         }
     }
 
-    void HealthUpdate()
+    private void AnimationRunController()
     {
-        if (health != animator.GetInteger("Health"))
+        if (animator.GetBool("runAnimationController") == true) 
         {
-            animator.SetTrigger("Hurt");
+            animator.SetBool("runAnimationController", false);
         }
-        animator.SetInteger("Health", health);
     }
 
-    void Death()
+    private void AnimationStationaryController()
+    {
+        if (animator.GetBool("isStationary") == true)
+        {
+            animator.SetBool("isStationary", false);
+        }
+    }
+
+    private void AnimationHurtResetController()
+    {
+        if (animator.GetBool("runAnimationController") == true)
+        {
+            animator.SetBool("runAnimationController", false);
+        }
+        if (animator.GetBool("isStationary") == true)
+        {
+            animator.SetBool("isStationary", false);
+        }
+    }
+
+    private void EnemyDead()
     {
         Destroy(gameObject);
     }
+
 }
