@@ -116,6 +116,11 @@ public class Player : MonoBehaviour
             health = 0;
         }
         
+        if (collision.CompareTag("EnemyStrike"))
+        {
+            health--;
+        }
+
         if (collision.CompareTag("Finish"))
         {
             int currentScene = SceneManager.GetActiveScene().buildIndex;
