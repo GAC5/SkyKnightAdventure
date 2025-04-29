@@ -116,7 +116,7 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!114 &3923425851413927656
 MonoBehaviour:
@@ -137,6 +137,11 @@ MonoBehaviour:
   renderer: {fileID: 3637980592596053879}
   lastYPos: 0
   whichAttackAnim: 0
+  raycastOrigin: {fileID: 0}
+  gameOverCanvas: {fileID: 0}
+  heart3: {fileID: 0}
+  heart2: {fileID: 0}
+  heart1: {fileID: 0}
   health: 3
   animator: {fileID: 4210012916208176624}
   attacking: 0
