@@ -9,20 +9,36 @@ public class HeavyBanditEnemyScript : MonoBehaviour
     [SerializeField] Rigidbody2D rigidbody;
     [SerializeField] Collider2D collider;
     private GameObject player;
+
     [SerializeField] int healthValue;
     [SerializeField] int attackValue;
     [SerializeField] float detectionDistanceX;
     [SerializeField] float detectionDistanceY;
-    private float distanceToPlayerX;
-    private float distanceToPlayerY;
     [SerializeField] float attackRange;
     [SerializeField] float verticalAttackThreshold;
     [SerializeField] float speed;
     [SerializeField] float movementThreshold = 0.01f;
     [SerializeField] float attackCooldown;
+    [SerializeField] bool roamingActivated;
+    [SerializeField] float roamingRange;
+    [SerializeField] float roamingSpeed;
+    [SerializeField] bool roamLeftStart;
+    [SerializeField] bool roamWait;
+    [SerializeField] float minIdlePauseTime;
+    [SerializeField] float maxIdlePauseTime;
+    private float distanceToPlayerX;
+    private float distanceToPlayerY;
     private float enemyLastXPosition;
+    private Vector3 originalScale;
     private float lastAttackTime;
     private bool enemyDead;
+    private float leftRoamLimit;
+    private float rightRoamLimit;
+    private float startXPosition;
+    private bool isPausing;
+
+
+
 
     // Start is called before the first frame update
     void Start()
@@ -33,6 +49,8 @@ public class HeavyBanditEnemyScript : MonoBehaviour
             player.GetComponent<Transform>();
         }
         enemyLastXPosition = transform.position.x;
+        originalScale = transform.localScale;
+        startXPosition = transform.position.x;
     }
 
     // Update is called once per frame
@@ -51,6 +69,7 @@ public class HeavyBanditEnemyScript : MonoBehaviour
         }
     }
 
+    //   transform.position = Vector2.MoveTowards(transform.position, player.position, speed * Time.deltaTime);
     private void PlayerDetect()
     {
         distanceToPlayerX = Mathf.Abs(transform.position.x - player.transform.position.x);
@@ -61,15 +80,86 @@ public class HeavyBanditEnemyScript : MonoBehaviour
         }
         else if ((distanceToPlayerX <= detectionDistanceX) && (distanceToPlayerY <= detectionDistanceY) && (distanceToPlayerX <= attackRange))
         {
-            //EnemyAttack();
+            EnemyAttack();
 
         }
         else
         {
             rigidbody.velocity = new Vector2(0, rigidbody.velocity.y);
-            // this is the section where no player is detected
-            //later, a passive animation or walk could be added to make enemies more dynamic
+            if (roamingActivated)
+            {
+                idleWalk();
+            }
+
         }
+    }
+
+    private void idleWalk()
+    {
+        leftRoamLimit = startXPosition - roamingRange;
+        rightRoamLimit = startXPosition + roamingRange;
+
+        if (roamLeftStart)
+        {
+            if (transform.position.x > leftRoamLimit)
+            {
+                rigidbody.velocity = new Vector2(-roamingSpeed, rigidbody.velocity.y);
+            }
+            else if (transform.position.x <= leftRoamLimit)
+            {
+                rigidbody.velocity = new Vector2(0, rigidbody.velocity.y);
+                if (roamWait)
+                {
+                    if (!isPausing)
+                    {
+                        StartCoroutine(PauseAtLimit());
+                    }
+                }
+                else
+                {
+                    roamLeftStart = false;
+                }
+            }
+        }
+        if (!roamLeftStart)
+        {
+            if (transform.position.x < rightRoamLimit)
+            {
+                rigidbody.velocity = new Vector2(roamingSpeed, rigidbody.velocity.y);
+            }
+            else if (transform.position.x >= rightRoamLimit)
+            {
+                rigidbody.velocity = new Vector2(0, rigidbody.velocity.y);
+                if (roamWait)
+                {
+                    if (!isPausing)
+                    {
+                        StartCoroutine(PauseAtLimit());
+                    }
+                }
+                else
+                {
+                    roamLeftStart = true;
+                }
+            }
+        }
+        CheckForMoveIdle();
+    }
+
+    private IEnumerator PauseAtLimit()
+    {
+        isPausing = true;
+        float waitTime = Random.Range(minIdlePauseTime, maxIdlePauseTime);
+        yield return new WaitForSeconds(waitTime);
+        if (roamLeftStart)
+        {
+            roamLeftStart = false;
+        }
+        else if (!roamLeftStart)
+        {
+            roamLeftStart = true;
+        }
+        isPausing = false;
     }
 
     private void MoveTowardsPlayer()
@@ -103,21 +193,81 @@ public class HeavyBanditEnemyScript : MonoBehaviour
 
         if (isMoving)
         {
+
             if (enemyMovement < 0)
             {
-                transform.localScale = new Vector3(2f, 2f, 2f);
+                transform.localScale = new Vector3(Mathf.Abs(originalScale.x), originalScale.y, originalScale.z);
             }
             else if (enemyMovement > 0)
             {
-                transform.localScale = new Vector3(-2f, 2f, 2f);
+                transform.localScale = new Vector3(-Mathf.Abs(originalScale.x), originalScale.y, originalScale.z);
             }
         }
 
         enemyLastXPosition = transform.position.x;
     }
 
+    private void CheckForMoveIdle()
+    {
+        float enemyMovement = transform.position.x - enemyLastXPosition;
 
+        bool isMoving = Mathf.Abs(enemyMovement) > movementThreshold;
 
+        if (isMoving == true && animator.GetBool("runAnimationController") == false)
+        {
+            animator.SetTrigger("enemyIdle");
+            animator.SetBool("runAnimationController", true);
+        }
+
+        if (isMoving)
+        {
+
+            if (enemyMovement < 0)
+            {
+                transform.localScale = new Vector3(Mathf.Abs(originalScale.x), originalScale.y, originalScale.z);
+            }
+            else if (enemyMovement > 0)
+            {
+                transform.localScale = new Vector3(-Mathf.Abs(originalScale.x), originalScale.y, originalScale.z);
+            }
+        }
+
+        enemyLastXPosition = transform.position.x;
+    }
+
+    private void EnemyAttack()
+    {
+        if ((distanceToPlayerX <= attackRange) && (distanceToPlayerY <= verticalAttackThreshold))
+        {
+            if (Time.time >= lastAttackTime + attackCooldown)
+            {
+                animator.SetBool("isStationary", true);
+                animator.SetTrigger("enemyAttack");
+                lastAttackTime = Time.time;
+            }
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (enemyDead == false)
+        {
+            if (collision.CompareTag("PlayerStrike"))
+            {
+                if (healthValue > 1)
+                {
+                    animator.SetTrigger("isTakingDamage");
+                    healthValue--;
+                }
+                else if (healthValue <= 1)
+                {
+                    healthValue--;
+                    animator.SetTrigger("enemyDead");
+                    enemyDead = true;
+                }
+            }
+        }
+    }
 
     private void AnimationRunController()
     {
@@ -153,5 +303,4 @@ public class HeavyBanditEnemyScript : MonoBehaviour
     }
 
 }
-
 
