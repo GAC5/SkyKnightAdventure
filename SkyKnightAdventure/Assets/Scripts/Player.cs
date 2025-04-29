@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 using UnityEngine.SceneManagement;
+using UnityEngine.VFX;
 
 public class Player : MonoBehaviour
 {
@@ -16,6 +17,11 @@ public class Player : MonoBehaviour
     [SerializeField] SpriteRenderer renderer;
     [SerializeField] float lastYPos;
     [SerializeField] int whichAttackAnim = 0;
+    [SerializeField] Transform raycastOrigin;
+    [SerializeField] GameObject gameOverCanvas;
+    [SerializeField] GameObject heart3;
+    [SerializeField] GameObject heart2;
+    [SerializeField] GameObject heart1;
     public int health = 3;
     public Animator animator;
     public bool attacking;
@@ -38,7 +44,6 @@ public class Player : MonoBehaviour
             CheckMovement();
             SpriteFlip();
             CheckAttack();
-            SwordBoxMove();
         }
         HealthUpdate();
     }
@@ -49,23 +54,12 @@ public class Player : MonoBehaviour
         {
             CheckForFalling();
         }
-    }
-
-    void SwordBoxMove()
-    {
-        if (renderer.flipX)
-        {
-            swordBox.transform.position = new Vector2(transform.position.x -1, swordBox.transform.position.y);
-        }
-        else
-        {
-            swordBox.transform.position = new Vector2(transform.position.x + 1, swordBox.transform.position.y);
-        }
+        grounded = animator.GetBool("Grounded");
     }
 
     void CheckForJump ()
     {
-        if (grounded && Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.W))
+        if (grounded && ((Input.GetKeyDown(KeyCode.W))))
         {
             rb.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
             animator.SetTrigger("Jump");
@@ -74,10 +68,10 @@ public class Player : MonoBehaviour
 
     void CheckMovement()
     {
-        float leftRight = Input.GetAxis("Horizontal");
-        transform.Translate(leftRight * Time.deltaTime * speed, 0, 0);
         if ((Input.GetKey(KeyCode.A)) || (Input.GetKey(KeyCode.D)))
         {
+            float leftRight = Input.GetAxis("Horizontal");
+            transform.Translate(leftRight * Time.deltaTime * speed, 0, 0);
             animator.SetBool("Moving", true);
         }
         else
@@ -88,7 +82,7 @@ public class Player : MonoBehaviour
 
     void CheckForFalling()
     {
-        if (transform.position.y > lastYPos)
+        if (transform.position.y >= lastYPos)
         {
             animator.SetBool("Falling", false);
         }
@@ -101,9 +95,8 @@ public class Player : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if(collision.transform.CompareTag("Ground"))
+        if (collision.transform.CompareTag("Ground"))
         {
-            grounded = true;
             animator.SetBool("Grounded", true);
         }
     }
@@ -112,19 +105,37 @@ public class Player : MonoBehaviour
     {
         if (collision.transform.CompareTag("Ground"))
         {
-            grounded = false;
             animator.SetBool("Grounded", false);
         }
     }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Death"))
+        {
+            health = 0;
+        }
+        
+        if (collision.CompareTag("Finish"))
+        {
+            int currentScene = SceneManager.GetActiveScene().buildIndex;
+            int totalScenes = SceneManager.sceneCountInBuildSettings;
+            if (currentScene == totalScenes - 1)
+            {
+            }
+            SceneManager.LoadScene(currentScene + 1);
+        }
+    }
+
     void SpriteFlip()
     {
-        if ((Input.GetKeyDown(KeyCode.A)) || (Input.GetKeyDown(KeyCode.LeftArrow)))
+        if ((Input.GetKey(KeyCode.A)))
         {
-            renderer.flipX = true;
+            transform.localScale = new Vector2 (-1.5f, 1.5f);
         }
-        if ((Input.GetKeyDown(KeyCode.LeftArrow)) || (Input.GetKeyDown(KeyCode.D)))
+        if ((Input.GetKey(KeyCode.D)))
         {
-            renderer.flipX = false;
+            transform.localScale = new Vector2(1.5f, 1.5f);
         }
     }
     
@@ -153,6 +164,26 @@ public class Player : MonoBehaviour
         {
             health--;
         }
+        if (health < 1)
+        {
+            gameOverCanvas.SetActive(true);
+        }
+        switch (health)
+        {
+            case 2:
+                heart3.SetActive(false);
+                break;
+            case 1:
+                heart3.SetActive(false);
+                heart2.SetActive(false);
+                break;
+            case < 1:
+                heart3.SetActive(false);
+                heart2.SetActive(false);
+                heart1.SetActive(false);
+                break;
+        }
+
     }
 
     void Restart()
