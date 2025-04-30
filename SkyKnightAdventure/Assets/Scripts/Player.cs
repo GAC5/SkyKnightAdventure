@@ -22,10 +22,12 @@ public class Player : MonoBehaviour
     [SerializeField] GameObject heart3;
     [SerializeField] GameObject heart2;
     [SerializeField] GameObject heart1;
+    [SerializeField] float attackCooldown;
     public int health = 3;
     public Animator animator;
     public bool attacking;
     public GameObject swordBox;
+    private float lastAttackTime;
 
 
     private void Start()
@@ -155,6 +157,16 @@ public class Player : MonoBehaviour
             animator.SetTrigger("Attack");
             animator.SetInteger("WhichAttackAnim", whichAttackAnim);
             whichAttackAnim++;
+            /*if (Time.time >= lastAttackTime + attackCooldown)
+            {
+                if (whichAttackAnim > 2)
+                {
+                    whichAttackAnim = 0;
+                }
+                animator.SetTrigger("Attack");
+                animator.SetInteger("WhichAttackAnim", whichAttackAnim);
+                whichAttackAnim++;
+            }*/
         }
     }
 
