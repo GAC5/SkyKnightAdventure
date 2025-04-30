@@ -150,14 +150,7 @@ public class Player : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            if (whichAttackAnim > 2)
-            {
-                whichAttackAnim = 0;
-            }
-            animator.SetTrigger("Attack");
-            animator.SetInteger("WhichAttackAnim", whichAttackAnim);
-            whichAttackAnim++;
-            /*if (Time.time >= lastAttackTime + attackCooldown)
+            if (Time.time >= lastAttackTime + attackCooldown)
             {
                 if (whichAttackAnim > 2)
                 {
@@ -166,7 +159,8 @@ public class Player : MonoBehaviour
                 animator.SetTrigger("Attack");
                 animator.SetInteger("WhichAttackAnim", whichAttackAnim);
                 whichAttackAnim++;
-            }*/
+                lastAttackTime = Time.time;
+            }
         }
     }
 
