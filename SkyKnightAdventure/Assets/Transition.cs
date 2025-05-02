@@ -6,18 +6,19 @@ using UnityEngine;
 public class Transition : MonoBehaviour
 {
     [SerializeField] Animator levelExit;
-    [SerializeField] GameObject miniBoss;
-    public Collider2D bossCollider;
+    [SerializeField] GameObject boss;
+    public Animator bossAnim;
 
     private void Start()
     {
-        bossCollider = miniBoss.GetComponent<BoxCollider2D>();
+        bossAnim = boss.GetComponent<Animator>();
     }
+
     private void Update()
     {
-        if (!bossCollider.isActiveAndEnabled)
+        if (bossAnim != null)
         {
-            levelExit.SetBool("Boss Defeated", true);
-        }
+                levelExit.SetBool("Boss Defeated", bossAnim.GetBool("enemyDead"));
+        }    
     }
 }
