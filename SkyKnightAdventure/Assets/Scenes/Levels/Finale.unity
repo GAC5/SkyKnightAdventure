@@ -537,9 +537,21 @@ PrefabInstance:
       value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 3923425851413927656, guid: 1c57bee82ec3ab14abd99e582e8c171a, type: 3}
+      propertyPath: healthText
+      value: 
+      objectReference: {fileID: 1070294129}
+    - target: {fileID: 3923425851413927656, guid: 1c57bee82ec3ab14abd99e582e8c171a, type: 3}
       propertyPath: raycastOrigin
       value: 
       objectReference: {fileID: 363349688}
+    - target: {fileID: 3923425851413927656, guid: 1c57bee82ec3ab14abd99e582e8c171a, type: 3}
+      propertyPath: attackCooldown
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 3923425851413927656, guid: 1c57bee82ec3ab14abd99e582e8c171a, type: 3}
+      propertyPath: cooldownSprite
+      value: 
+      objectReference: {fileID: 936106696}
     - target: {fileID: 3923425851413927656, guid: 1c57bee82ec3ab14abd99e582e8c171a, type: 3}
       propertyPath: gameOverCanvas
       value: 
@@ -2392,7 +2404,7 @@ CompositeCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
-  m_GeometryType: 0
+  m_GeometryType: 1
   m_GenerationType: 0
   m_EdgeRadius: 0
   m_ColliderPaths:
@@ -9499,7 +9511,7 @@ TilemapCollider2D:
   m_GameObject: {fileID: 2048747840}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 6200000, guid: 86be9be165d81244c82c2ad9ac5c3c9a, type: 2}
+  m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -9521,7 +9533,7 @@ TilemapCollider2D:
     m_Bits: 4294967295
   m_IsTrigger: 0
   m_UsedByEffector: 0
-  m_UsedByComposite: 1
+  m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   m_MaximumTileChangeCount: 1000
   m_ExtrusionFactor: 0
