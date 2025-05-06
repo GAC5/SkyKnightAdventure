@@ -10,6 +10,25 @@ public class CameraController : MonoBehaviour
     [SerializeField] bool lookAtPlayer;
     [SerializeField] int lowerLimit = -2;
     [SerializeField] Camera camera;
+
+    public static CameraController instance;
+
+    private void Awake()
+    {
+        //if no gamemanager / if not original gamemanager
+        if (instance != null && instance != this)
+        {
+            //destroy duplicate
+            Destroy(gameObject);
+
+            //ensures the rest of the awake method doesnt execute
+            return;
+        }
+
+        instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
+
     void Update()
     {
         if (player.position.y >= lowerLimit)

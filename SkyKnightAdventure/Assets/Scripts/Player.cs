@@ -10,6 +10,7 @@ using UnityEngine.VFX;
 
 public class Player : MonoBehaviour
 {
+
     [SerializeField] Rigidbody2D rb;
     [SerializeField] float jumpForce;
     [SerializeField] float speed;
@@ -28,6 +29,23 @@ public class Player : MonoBehaviour
     public GameObject swordBox;
     private float lastAttackTime;
 
+    public static Player instance;
+
+    private void Awake()
+    {
+        //if no gamemanager / if not original gamemanager
+        if (instance != null && instance != this)
+        {
+            //destroy duplicate
+            Destroy(gameObject);
+
+            //ensures the rest of the awake method doesnt execute
+            return;
+        }
+
+        instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
 
     private void Start()
     {
