@@ -8,6 +8,8 @@ using Unity.VisualScripting;
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
+    public bool restart;
+    public bool next;
 
     private void Awake()
     {
@@ -25,15 +27,25 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
+    private void Start()
+    {
+        restart = false;
+        next = false;
+    }
+
     public void Restart()
     {
+        restart = true;
         string currentscene = SceneManager.GetActiveScene().name;
         SceneManager.LoadScene(currentscene);
+        restart = false;
     }
     
     public void NextScene()
     {
+        next = true;
         int currentScene = SceneManager.GetActiveScene().buildIndex;
         SceneManager.LoadScene(currentScene + 1);
+        next = false;
     }
 }

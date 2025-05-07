@@ -10,7 +10,7 @@ using UnityEngine.VFX;
 
 public class Player : MonoBehaviour
 {
-
+    [SerializeField] GameObject hero;
     [SerializeField] Rigidbody2D rb;
     [SerializeField] float jumpForce;
     [SerializeField] float speed;
@@ -23,6 +23,9 @@ public class Player : MonoBehaviour
     [SerializeField] GameObject cooldownSprite;
     [SerializeField] Text healthText;
     [SerializeField] float attackCooldown;
+    [SerializeField] int startHealth;
+    [SerializeField] float startAttackCooldown;
+    public Vector3 startPos = new Vector3(-10, -5, 0);
     public int health = 3;
     public Animator animator;
     public bool attacking;
@@ -49,13 +52,16 @@ public class Player : MonoBehaviour
 
     private void Start()
     {
+        startHealth = health;
+        startAttackCooldown = attackCooldown;
         rb = GetComponent<Rigidbody2D>();
         grounded = false;
         lastYPos = transform.position.y;
         animator.SetInteger("Health", health);
         swordBox.SetActive(false);
     }
-    void Update()
+
+    private void Update()
     {
         if (health > 0)
         {
@@ -142,6 +148,9 @@ public class Player : MonoBehaviour
 
         if (collision.CompareTag("Finish"))
         {
+            startPos = hero.transform.position;
+            startHealth = health;
+            startAttackCooldown = attackCooldown;
             int currentScene = SceneManager.GetActiveScene().buildIndex;
             int totalScenes = SceneManager.sceneCountInBuildSettings;
             if (currentScene == totalScenes - 1)
@@ -204,10 +213,15 @@ public class Player : MonoBehaviour
         healthText.text = health.ToString();
     }
 
-    void Restart()
+    public void Restart()
     {
+        hero.transform.position = startPos;
+        health = startHealth;
+        attackCooldown = startAttackCooldown;
+        Debug.Log("Restart");
         string currentscene = SceneManager.GetActiveScene().name;
         SceneManager.LoadScene(currentscene);
+        gameOverCanvas.SetActive(false);
     }
 }
 
