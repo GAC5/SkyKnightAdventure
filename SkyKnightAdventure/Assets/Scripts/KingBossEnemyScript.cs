@@ -224,11 +224,11 @@ public class KingBossEnemyScript : MonoBehaviour
 
             if (enemyMovement < 0)
             {
-                transform.localScale = new Vector3(Mathf.Abs(originalScale.x), originalScale.y, originalScale.z);
+                transform.localScale = new Vector3(-Mathf.Abs(originalScale.x), originalScale.y, originalScale.z);
             }
             else if (enemyMovement > 0)
             {
-                transform.localScale = new Vector3(-Mathf.Abs(originalScale.x), originalScale.y, originalScale.z);
+                transform.localScale = new Vector3(Mathf.Abs(originalScale.x), originalScale.y, originalScale.z);
             }
         }
 
@@ -237,12 +237,25 @@ public class KingBossEnemyScript : MonoBehaviour
 
     private void EnemyAttack()
     {
+        int attackNumber = Random.Range(1, 4); //generates 1 up to 3
         if ((distanceToPlayerX <= attackRange) && (distanceToPlayerY <= verticalAttackThreshold))
         {
             if (Time.time >= lastAttackTime + attackCooldown)
             {
                 animator.SetBool("isStationary", true);
-                animator.SetTrigger("enemyAttack");
+                if (attackNumber == 1)
+                {
+                    animator.SetTrigger("enemyAttack1");
+                }
+                else if (attackNumber == 2)
+                {
+                    animator.SetTrigger("enemyAttack2");
+                }
+                else if (attackNumber ==3)
+                {
+                    animator.SetTrigger("enemyAttack3");
+                }
+                
                 lastAttackTime = Time.time;
             }
         }
@@ -301,5 +314,4 @@ public class KingBossEnemyScript : MonoBehaviour
     {
         Destroy(gameObject);
     }
-
 }
