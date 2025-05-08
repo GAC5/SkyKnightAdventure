@@ -25,6 +25,7 @@ public class Player : MonoBehaviour
     [SerializeField] float attackCooldown;
     [SerializeField] int startHealth;
     [SerializeField] float startAttackCooldown;
+    [SerializeField] GameObject upgradeMenu;
     public Vector3 startPos = new Vector3(-10, -5, 0);
     public int health = 3;
     public Animator animator;
@@ -52,6 +53,7 @@ public class Player : MonoBehaviour
 
     private void Start()
     {
+        upgradeMenu.SetActive(false);
         startHealth = health;
         startAttackCooldown = attackCooldown;
         rb = GetComponent<Rigidbody2D>();
@@ -148,16 +150,73 @@ public class Player : MonoBehaviour
 
         if (collision.CompareTag("Finish"))
         {
-            startPos = hero.transform.position;
-            startHealth = health;
-            startAttackCooldown = attackCooldown;
-            int currentScene = SceneManager.GetActiveScene().buildIndex;
-            int totalScenes = SceneManager.sceneCountInBuildSettings;
-            if (currentScene == totalScenes - 1)
-            {
-            }
-            SceneManager.LoadScene(currentScene + 1);
+            upgradeMenu.SetActive(true);
+            Time.timeScale = 0;
         }
+    }
+
+    public void UpgradeHealth()
+    {
+        health = health + 5;
+        Time.timeScale = 1;
+        int currentScene = SceneManager.GetActiveScene().buildIndex;
+        int totalScenes = SceneManager.sceneCountInBuildSettings;
+        if (currentScene == totalScenes - 1)
+        {
+        }
+        SceneManager.LoadScene(currentScene + 1);
+        startPos = hero.transform.position;
+        startHealth = health;
+        startAttackCooldown = attackCooldown;
+        upgradeMenu.SetActive(false);
+    }
+
+    public void UpgradeCooldown()
+    {
+        attackCooldown = attackCooldown - 0.2f;
+        Time.timeScale = 1;
+        int currentScene = SceneManager.GetActiveScene().buildIndex;
+        int totalScenes = SceneManager.sceneCountInBuildSettings;
+        if (currentScene == totalScenes - 1)
+        {
+        }
+        SceneManager.LoadScene(currentScene + 1);
+        startPos = hero.transform.position;
+        startHealth = health;
+        startAttackCooldown = attackCooldown;
+        upgradeMenu.SetActive(false);
+    }
+
+    public void UpgradeSpeed()
+    {
+        speed = speed + 2;
+        Time.timeScale = 1;
+        int currentScene = SceneManager.GetActiveScene().buildIndex;
+        int totalScenes = SceneManager.sceneCountInBuildSettings;
+        if (currentScene == totalScenes - 1)
+        {
+        }
+        SceneManager.LoadScene(currentScene + 1);
+        startPos = hero.transform.position;
+        startHealth = health;
+        startAttackCooldown = attackCooldown;
+        upgradeMenu.SetActive(false);
+    }
+
+    public void UpgradeJump()
+    {
+        jumpForce = jumpForce + 2;
+        Time.timeScale = 1;
+        int currentScene = SceneManager.GetActiveScene().buildIndex;
+        int totalScenes = SceneManager.sceneCountInBuildSettings;
+        if (currentScene == totalScenes - 1)
+        {
+        }
+        SceneManager.LoadScene(currentScene + 1);
+        startPos = hero.transform.position;
+        startHealth = health;
+        startAttackCooldown = attackCooldown;
+        upgradeMenu.SetActive(false);
     }
 
     void SpriteFlip()
