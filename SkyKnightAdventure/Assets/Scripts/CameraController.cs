@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class CameraController : MonoBehaviour
 {
@@ -10,6 +11,8 @@ public class CameraController : MonoBehaviour
     [SerializeField] bool lookAtPlayer;
     [SerializeField] int lowerLimit = -2;
     [SerializeField] Camera camera;
+    [SerializeField] GameObject bgNight;
+    [SerializeField] GameObject bgDay;
 
     public static CameraController instance;
 
@@ -40,6 +43,18 @@ public class CameraController : MonoBehaviour
             {
                 transform.LookAt(player);
             }
+        }
+        int currentScene = SceneManager.GetActiveScene().buildIndex;
+        int totalScenes = SceneManager.sceneCountInBuildSettings;
+        if (currentScene == totalScenes - 2)
+        {
+            Destroy(bgDay);
+            bgNight.SetActive(true);
+        }
+        if (currentScene == totalScenes - 1)
+        {
+            Destroy(camera);
+            Destroy(bgNight);
         }
     }
 }

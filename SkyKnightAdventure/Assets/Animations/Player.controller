@@ -351,7 +351,7 @@ AnimatorStateTransition:
     m_EventTreshold: 0
   - m_ConditionMode: 3
     m_ConditionEvent: Health
-    m_EventTreshold: -999
+    m_EventTreshold: -1
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -4744771593645729979}
   m_Solo: 0
@@ -635,8 +635,8 @@ AnimatorStateTransition:
   m_IsExit: 0
   serializedVersion: 3
   m_TransitionDuration: 0.25
-  m_TransitionOffset: 0
-  m_ExitTime: 0.75
+  m_TransitionOffset: 0.2044447
+  m_ExitTime: 0.8522222
   m_HasExitTime: 0
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
