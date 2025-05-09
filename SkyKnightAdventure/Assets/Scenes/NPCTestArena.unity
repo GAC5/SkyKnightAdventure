@@ -727,11 +727,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7515689671057095423, guid: 4fd1cd92d2dea6d499f3c3081c11a66f, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 14.8
+      value: 24.1
       objectReference: {fileID: 0}
     - target: {fileID: 7515689671057095423, guid: 4fd1cd92d2dea6d499f3c3081c11a66f, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -4.71
+      value: -5.27
       objectReference: {fileID: 0}
     - target: {fileID: 7515689671057095423, guid: 4fd1cd92d2dea6d499f3c3081c11a66f, type: 3}
       propertyPath: m_LocalPosition.z
@@ -972,20 +972,23 @@ MonoBehaviour:
   collider: {fileID: 1200122834}
   healthValue: 20
   attackValue: 1
-  detectionDistanceX: 25
-  detectionDistanceY: 25
+  detectionDistanceX: 20
+  detectionDistanceY: 20
   attackRange: 3
   verticalAttackThreshold: 5
   speed: 5
   movementThreshold: 0.01
   attackCooldown: 2
-  roamingActivated: 1
+  roamingActivated: 0
   roamingRange: 5
   roamingSpeed: 2
   roamLeftStart: 1
   roamWait: 1
   minIdlePauseTime: 1
   maxIdlePauseTime: 3
+  rageModeActivated: 0
+  rageModeDuration: 10
+  rageModeSpeed: 8
 --- !u!1 &1344512313
 GameObject:
   m_ObjectHideFlags: 0
@@ -1630,11 +1633,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1742153315402442435, guid: 3420e293ded2a7849a06dbb9b88d7d21, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 17.26
+      value: 24.1
       objectReference: {fileID: 0}
     - target: {fileID: 1742153315402442435, guid: 3420e293ded2a7849a06dbb9b88d7d21, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -3.3
+      value: -2.98
       objectReference: {fileID: 0}
     - target: {fileID: 1742153315402442435, guid: 3420e293ded2a7849a06dbb9b88d7d21, type: 3}
       propertyPath: m_LocalPosition.z

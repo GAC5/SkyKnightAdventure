@@ -36,6 +36,11 @@ public class KingBossEnemyScript : MonoBehaviour
     private float rightRoamLimit;
     private float startXPosition;
     private bool isPausing;
+    private int attackNumber;
+    [SerializeField] bool rageModeActivated;
+    private bool rageMode; 
+    [SerializeField] float rageModeDuration;
+    [SerializeField] float rageModeSpeed;
 
 
 
@@ -67,6 +72,8 @@ public class KingBossEnemyScript : MonoBehaviour
             collider.enabled = false;
 
         }
+
+        
     }
 
     //   transform.position = Vector2.MoveTowards(transform.position, player.position, speed * Time.deltaTime);
@@ -74,14 +81,24 @@ public class KingBossEnemyScript : MonoBehaviour
     {
         distanceToPlayerX = Mathf.Abs(transform.position.x - player.transform.position.x);
         distanceToPlayerY = Mathf.Abs(transform.position.y - player.transform.position.y);
-        if ((distanceToPlayerX <= detectionDistanceX) && (distanceToPlayerY <= detectionDistanceY) && (distanceToPlayerX > attackRange))
+        bool closeToPlayer = ((distanceToPlayerX <= detectionDistanceX) && (distanceToPlayerY <= detectionDistanceY));
+        if ((closeToPlayer) && (distanceToPlayerX > attackRange) && (!rageMode))
         {
             MoveTowardsPlayer();
         }
-        else if ((distanceToPlayerX <= detectionDistanceX) && (distanceToPlayerY <= detectionDistanceY) && (distanceToPlayerX <= attackRange))
+        else if ((closeToPlayer) && (distanceToPlayerX <= attackRange) && (!rageMode))
         {
             EnemyAttack();
 
+        }
+        else if ((rageModeActivated) && (rageMode))
+        {
+            while (Time.time <= (Time.time + rageModeDuration))
+            {
+                MoveTowardsPlayer();
+                EnemyRageAttack();
+            }
+            
         }
         else
         {
@@ -166,9 +183,13 @@ public class KingBossEnemyScript : MonoBehaviour
     {
         Vector2 direction = (player.transform.position - transform.position).normalized;
 
-        if (animator.GetBool("isStationary") == false)
+        if ((animator.GetBool("isStationary") == false) && (!rageMode))
         {
             rigidbody.velocity = new Vector2(direction.x * speed, rigidbody.velocity.y);
+        }
+        else if ((animator.GetBool("isStationary") == false) && (rageMode))
+        {
+            rigidbody.velocity = new Vector2(direction.x * rageModeSpeed, rigidbody.velocity.y);
         }
         else
         {
@@ -224,11 +245,11 @@ public class KingBossEnemyScript : MonoBehaviour
 
             if (enemyMovement < 0)
             {
-                transform.localScale = new Vector3(-Mathf.Abs(originalScale.x), originalScale.y, originalScale.z);
+                transform.localScale = new Vector3(Mathf.Abs(originalScale.x), originalScale.y, originalScale.z);
             }
             else if (enemyMovement > 0)
             {
-                transform.localScale = new Vector3(Mathf.Abs(originalScale.x), originalScale.y, originalScale.z);
+                transform.localScale = new Vector3(-Mathf.Abs(originalScale.x), originalScale.y, originalScale.z);
             }
         }
 
@@ -237,7 +258,7 @@ public class KingBossEnemyScript : MonoBehaviour
 
     private void EnemyAttack()
     {
-        int attackNumber = Random.Range(1, 4); //generates 1 up to 3
+        attackNumber = Random.Range(1, 4); //generates 1 up to 3
         if ((distanceToPlayerX <= attackRange) && (distanceToPlayerY <= verticalAttackThreshold))
         {
             if (Time.time >= lastAttackTime + attackCooldown)
@@ -261,9 +282,19 @@ public class KingBossEnemyScript : MonoBehaviour
         }
     }
 
+    private void EnemyRageAttack()
+    {
+        if ((distanceToPlayerX <= attackRange) && (distanceToPlayerY <= verticalAttackThreshold))
+        {
+            animator.SetBool("isStationary", true);
+            animator.SetTrigger("enemyRageAttack");
+        }
+            
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (enemyDead == false)
+        if ((enemyDead == false) && (!rageMode))
         {
             if (collision.CompareTag("PlayerStrike"))
             {
