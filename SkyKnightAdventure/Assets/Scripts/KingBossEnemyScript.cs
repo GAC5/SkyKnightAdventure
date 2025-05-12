@@ -38,9 +38,14 @@ public class KingBossEnemyScript : MonoBehaviour
     private bool isPausing;
     private int attackNumber;
     [SerializeField] bool rageModeActivated;
-    private bool rageMode; 
+    private bool rageMode;
+    private int rageModeHitCounter = 0;
     [SerializeField] float rageModeDuration;
     [SerializeField] float rageModeSpeed;
+    [SerializeField] float rageModeTimeActivation;
+    [SerializeField] int rageModeHitActivation;
+    private float timeToRageMode;
+    private float rageModeEndTime;
 
 
 
@@ -56,6 +61,7 @@ public class KingBossEnemyScript : MonoBehaviour
         enemyLastXPosition = transform.position.x;
         originalScale = transform.localScale;
         startXPosition = transform.position.x;
+        timeToRageMode = Time.time + rageModeTimeActivation;
     }
 
     // Update is called once per frame
@@ -93,12 +99,18 @@ public class KingBossEnemyScript : MonoBehaviour
         }
         else if ((rageModeActivated) && (rageMode))
         {
-            while (Time.time <= (Time.time + rageModeDuration))
+            if (Time.time <= rageModeEndTime)
             {
                 MoveTowardsPlayer();
                 EnemyRageAttack();
+                Debug.Log("RAGE MODE!!!!");
             }
-            
+            else
+            {
+                rageMode = false;
+                timeToRageMode = Time.time + rageModeTimeActivation;
+            }
+           
         }
         else
         {
@@ -287,7 +299,18 @@ public class KingBossEnemyScript : MonoBehaviour
         if ((distanceToPlayerX <= attackRange) && (distanceToPlayerY <= verticalAttackThreshold))
         {
             animator.SetBool("isStationary", true);
-            animator.SetTrigger("enemyRageAttack");
+            if (player.transform.position.y > transform.position.y)
+            {
+                animator.SetTrigger("enemyRageAttack3");
+            }
+            else if (distanceToPlayerX >= 2)
+            {
+                animator.SetTrigger("enemyRageAttack2");
+            }
+            else
+            {
+                animator.SetTrigger("enemyRageAttack1");
+            }
         }
             
     }
@@ -302,6 +325,7 @@ public class KingBossEnemyScript : MonoBehaviour
                 {
                     animator.SetTrigger("isTakingDamage");
                     healthValue--;
+                    RageModeActivator();
                 }
                 else if (healthValue <= 1)
                 {
@@ -311,6 +335,20 @@ public class KingBossEnemyScript : MonoBehaviour
                 }
             }
         }
+    }
+
+    private void RageModeActivator()
+    {
+        rageModeHitCounter++;
+        if ((Time.time <= timeToRageMode) && (rageModeHitCounter >= rageModeHitActivation))
+        {
+            rageMode = true;
+            rageModeHitCounter = 0;
+            rageModeEndTime = Time.time + rageModeDuration;
+            Debug.Log("RAGE MODE!!!!");
+        }
+    
+       
     }
 
     private void AnimationRunController()
