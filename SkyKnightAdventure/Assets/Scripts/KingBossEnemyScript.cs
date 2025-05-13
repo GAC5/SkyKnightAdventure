@@ -42,6 +42,7 @@ public class KingBossEnemyScript : MonoBehaviour
     private int rageModeHitCounter = 0;
     [SerializeField] float rageModeDuration;
     [SerializeField] float rageModeSpeed;
+    [SerializeField] float rageModeAttackCooldown;
     [SerializeField] float rageModeTimeActivation;
     [SerializeField] int rageModeHitActivation;
     private float timeToRageMode;
@@ -289,21 +290,25 @@ public class KingBossEnemyScript : MonoBehaviour
     {
         if ((distanceToPlayerX <= attackRange) && (distanceToPlayerY <= verticalAttackThreshold))
         {
-            animator.SetBool("isStationary", true);
-            if (player.transform.position.y > transform.position.y)
+            if (Time.time >= lastAttackTime + rageModeAttackCooldown)
             {
-                animator.SetTrigger("enemyRageAttack3");
-            }
-            else if (distanceToPlayerX >= 2)
-            {
-                animator.SetTrigger("enemyRageAttack2");
-            }
-            else
-            {
-                animator.SetTrigger("enemyRageAttack1");
-            }
-        }
-            
+                animator.SetBool("isStationary", true);
+                if (player.transform.position.y > transform.position.y)
+                {
+                    animator.SetTrigger("enemyRageAttack3");
+                }
+                else if (distanceToPlayerX >= 2)
+                {
+                    animator.SetTrigger("enemyRageAttack2");
+                }
+                else
+                {
+                    animator.SetTrigger("enemyRageAttack1");
+                }
+
+                lastAttackTime = Time.time;
+            } 
+        }      
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -348,9 +353,11 @@ public class KingBossEnemyScript : MonoBehaviour
     private IEnumerator DoRageMode()
     {
         rageMode = true;
+        renderer.material.color = Color.red;
         Debug.Log("RAGE MODE ON!");
         yield return new WaitForSeconds(rageModeDuration);
         rageMode = false;
+        renderer.material.color = Color.white;
         Debug.Log("RAGE MODE OFF!");
     }
 
