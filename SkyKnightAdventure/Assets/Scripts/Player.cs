@@ -236,7 +236,7 @@ public class Player : MonoBehaviour
         if (Time.time >= lastAttackTime + attackCooldown)
         {
             cooldownSprite.SetActive(false);
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButton(0))
             {
                 if (whichAttackAnim > 2)
                 {
