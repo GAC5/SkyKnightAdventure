@@ -99,17 +99,8 @@ public class KingBossEnemyScript : MonoBehaviour
         }
         else if ((rageModeActivated) && (rageMode))
         {
-            if (Time.time <= rageModeEndTime)
-            {
-                MoveTowardsPlayer();
-                EnemyRageAttack();
-                Debug.Log("RAGE MODE!!!!");
-            }
-            else
-            {
-                rageMode = false;
-                timeToRageMode = Time.time + rageModeTimeActivation;
-            }
+            MoveTowardsPlayer();
+            EnemyRageAttack();
            
         }
         else
@@ -317,21 +308,28 @@ public class KingBossEnemyScript : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if ((enemyDead == false) && (!rageMode))
+        if (enemyDead == false)
         {
-            if (collision.CompareTag("PlayerStrike"))
+            if ((rageModeActivated) && (rageMode))
             {
-                if (healthValue > 1)
+                Debug.Log("immortal");
+            }
+            else
+            {
+                if (collision.CompareTag("PlayerStrike"))
                 {
-                    animator.SetTrigger("isTakingDamage");
-                    healthValue--;
-                    RageModeActivator();
-                }
-                else if (healthValue <= 1)
-                {
-                    healthValue--;
-                    animator.SetTrigger("enemyDead");
-                    enemyDead = true;
+                    if (healthValue > 1)
+                    {
+                        animator.SetTrigger("isTakingDamage");
+                        healthValue--;
+                        RageModeActivator();
+                    }
+                    else if (healthValue <= 1)
+                    {
+                        healthValue--;
+                        animator.SetTrigger("enemyDead");
+                        enemyDead = true;
+                    }
                 }
             }
         }
@@ -340,15 +338,20 @@ public class KingBossEnemyScript : MonoBehaviour
     private void RageModeActivator()
     {
         rageModeHitCounter++;
-        if ((Time.time <= timeToRageMode) && (rageModeHitCounter >= rageModeHitActivation))
+        if (rageModeHitCounter >= rageModeHitActivation && !rageMode)
         {
-            rageMode = true;
             rageModeHitCounter = 0;
-            rageModeEndTime = Time.time + rageModeDuration;
-            Debug.Log("RAGE MODE!!!!");
+            StartCoroutine(DoRageMode());
         }
-    
-       
+    }
+
+    private IEnumerator DoRageMode()
+    {
+        rageMode = true;
+        Debug.Log("RAGE MODE ON!");
+        yield return new WaitForSeconds(rageModeDuration);
+        rageMode = false;
+        Debug.Log("RAGE MODE OFF!");
     }
 
     private void AnimationRunController()
