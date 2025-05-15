@@ -13,6 +13,7 @@ public class CameraController : MonoBehaviour
     [SerializeField] Camera camera;
     [SerializeField] GameObject bgNight;
     [SerializeField] GameObject bgDay;
+    [SerializeField] GameObject mainCam;
 
     public static CameraController instance;
 

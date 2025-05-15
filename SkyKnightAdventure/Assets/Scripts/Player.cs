@@ -26,6 +26,8 @@ public class Player : MonoBehaviour
     [SerializeField] int startHealth;
     [SerializeField] float startAttackCooldown;
     [SerializeField] GameObject upgradeMenu;
+    [SerializeField] GameObject pauseMenu;
+    [SerializeField] bool ironman;
     public Vector3 startPos = new Vector3(-10, -5, 0);
     public int health = 3;
     public Animator animator;
@@ -53,6 +55,7 @@ public class Player : MonoBehaviour
 
     private void Start()
     {
+        ironman = false;
         upgradeMenu.SetActive(false);
         startHealth = health;
         startAttackCooldown = attackCooldown;
@@ -61,6 +64,7 @@ public class Player : MonoBehaviour
         lastYPos = transform.position.y;
         animator.SetInteger("Health", health);
         swordBox.SetActive(false);
+        pauseMenu.SetActive(false);
     }
 
     private void Update()
@@ -73,6 +77,19 @@ public class Player : MonoBehaviour
             CheckAttack();
         }
         HealthUpdate();
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (pauseMenu.activeInHierarchy && !upgradeMenu.activeInHierarchy)
+            {
+                Time.timeScale = 1;
+                pauseMenu.SetActive(false);
+            }
+            else
+            {
+                Time.timeScale = 0;
+                pauseMenu.SetActive(true);
+            }
+        }
     }
 
     private void FixedUpdate()
@@ -165,9 +182,12 @@ public class Player : MonoBehaviour
         {
         }
         SceneManager.LoadScene(currentScene + 1);
-        startPos = hero.transform.position;
-        startHealth = health;
-        startAttackCooldown = attackCooldown;
+        if (!ironman)
+        {
+            startPos = hero.transform.position;
+            startHealth = health;
+            startAttackCooldown = attackCooldown;
+        }
         upgradeMenu.SetActive(false);
     }
 
@@ -181,9 +201,12 @@ public class Player : MonoBehaviour
         {
         }
         SceneManager.LoadScene(currentScene + 1);
-        startPos = hero.transform.position;
-        startHealth = health;
-        startAttackCooldown = attackCooldown;
+        if (!ironman)
+        {
+            startPos = hero.transform.position;
+            startHealth = health;
+            startAttackCooldown = attackCooldown;
+        }
         upgradeMenu.SetActive(false);
     }
 
@@ -197,9 +220,12 @@ public class Player : MonoBehaviour
         {
         }
         SceneManager.LoadScene(currentScene + 1);
-        startPos = hero.transform.position;
-        startHealth = health;
-        startAttackCooldown = attackCooldown;
+        if (!ironman)
+        {
+            startPos = hero.transform.position;
+            startHealth = health;
+            startAttackCooldown = attackCooldown;
+        }
         upgradeMenu.SetActive(false);
     }
 
@@ -213,9 +239,12 @@ public class Player : MonoBehaviour
         {
         }
         SceneManager.LoadScene(currentScene + 1);
-        startPos = hero.transform.position;
-        startHealth = health;
-        startAttackCooldown = attackCooldown;
+        if (!ironman)
+        {
+            startPos = hero.transform.position;
+            startHealth = health;
+            startAttackCooldown = attackCooldown;
+        }
         upgradeMenu.SetActive(false);
     }
 
@@ -278,9 +307,24 @@ public class Player : MonoBehaviour
         health = startHealth;
         attackCooldown = startAttackCooldown;
         Debug.Log("Restart");
-        string currentscene = SceneManager.GetActiveScene().name;
-        SceneManager.LoadScene(currentscene);
+        string currentScene = SceneManager.GetActiveScene().name;
+        SceneManager.LoadScene(currentScene);
         gameOverCanvas.SetActive(false);
+        Time.timeScale = 1;
+    }
+
+    public void Resume()
+    {
+        Debug.Log("Resume");
+        pauseMenu.SetActive(false);
+        Time.timeScale = 1;
+    }
+    
+    public void IronStart()
+    {
+        ironman = true;
+        int currentScene = SceneManager.GetActiveScene().buildIndex;
+        SceneManager.LoadScene(currentScene + 1);
     }
 }
 
