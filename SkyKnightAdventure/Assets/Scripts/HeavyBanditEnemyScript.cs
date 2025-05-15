@@ -75,12 +75,17 @@ public class HeavyBanditEnemyScript : MonoBehaviour
         distanceToPlayerX = Mathf.Abs(transform.position.x - player.transform.position.x);
         distanceToPlayerY = Mathf.Abs(transform.position.y - player.transform.position.y);
         if ((distanceToPlayerX <= detectionDistanceX) && (distanceToPlayerY <= detectionDistanceY) && (distanceToPlayerX > attackRange))
-        {
-            MoveTowardsPlayer();
+        { 
+            if (!animator.GetBool("isStationary"))
+            {
+                MoveTowardsPlayer();
+            }
+            CheckForMove();
         }
         else if ((distanceToPlayerX <= detectionDistanceX) && (distanceToPlayerY <= detectionDistanceY) && (distanceToPlayerX <= attackRange))
         {
             EnemyAttack();
+            CheckForMove();
 
         }
         else
@@ -88,7 +93,10 @@ public class HeavyBanditEnemyScript : MonoBehaviour
             rigidbody.velocity = new Vector2(0, rigidbody.velocity.y);
             if (roamingActivated)
             {
-                idleWalk();
+                if (!animator.GetBool("isStationary"))
+                {
+                    idleWalk();
+                }
             }
 
         }
@@ -174,37 +182,49 @@ public class HeavyBanditEnemyScript : MonoBehaviour
         {
             rigidbody.velocity = new Vector2(0, rigidbody.velocity.y);
         }
-
-        CheckForMove();
-
     }
 
     private void CheckForMove()
     {
         float enemyMovement = transform.position.x - enemyLastXPosition;
 
-        bool isMoving = Mathf.Abs(enemyMovement) > movementThreshold;
-
-        if (isMoving == true && animator.GetBool("runAnimationController") == false)
+        if (distanceToPlayerX <= attackRange)
         {
-            animator.SetTrigger("enemyMoving");
-            animator.SetBool("runAnimationController", true);
-        }
-
-        if (isMoving)
-        {
-
-            if (enemyMovement < 0)
-            {
-                transform.localScale = new Vector3(Mathf.Abs(originalScale.x), originalScale.y, originalScale.z);
-            }
-            else if (enemyMovement > 0)
+            if ((transform.position.x - player.transform.position.x) < -.1)
             {
                 transform.localScale = new Vector3(-Mathf.Abs(originalScale.x), originalScale.y, originalScale.z);
             }
+            else if ((transform.position.x - player.transform.position.x) > .1)
+            {
+                transform.localScale = new Vector3(Mathf.Abs(originalScale.x), originalScale.y, originalScale.z);
+            }
+        }
+        else
+        {
+            bool isMoving = Mathf.Abs(enemyMovement) > movementThreshold;
+
+            if (isMoving == true && animator.GetBool("runAnimationController") == false)
+            {
+                animator.SetTrigger("enemyMoving");
+                animator.SetBool("runAnimationController", true);
+            }
+
+            if (isMoving)
+            {
+
+                if (enemyMovement < 0)
+                {
+                    transform.localScale = new Vector3(Mathf.Abs(originalScale.x), originalScale.y, originalScale.z);
+                }
+                else if (enemyMovement > 0)
+                {
+                    transform.localScale = new Vector3(-Mathf.Abs(originalScale.x), originalScale.y, originalScale.z);
+                }
+            }
+
+            enemyLastXPosition = transform.position.x;
         }
 
-        enemyLastXPosition = transform.position.x;
     }
 
     private void CheckForMoveIdle()
@@ -241,6 +261,7 @@ public class HeavyBanditEnemyScript : MonoBehaviour
         {
             if (Time.time >= lastAttackTime + attackCooldown)
             {
+                rigidbody.velocity = new Vector2(0, rigidbody.velocity.y);
                 animator.SetBool("isStationary", true);
                 animator.SetTrigger("enemyAttack");
                 lastAttackTime = Time.time;
