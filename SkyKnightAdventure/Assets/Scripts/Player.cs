@@ -7,6 +7,7 @@ using UnityEngine.UI;
 using UnityEngine.UIElements;
 using UnityEngine.SceneManagement;
 using UnityEngine.VFX;
+using UnityEditor;
 
 public class Player : MonoBehaviour
 {
@@ -55,6 +56,7 @@ public class Player : MonoBehaviour
 
     private void Start()
     {
+        hero.SetActive(false);
         ironman = false;
         upgradeMenu.SetActive(false);
         startHealth = health;
@@ -310,6 +312,7 @@ public class Player : MonoBehaviour
         string currentScene = SceneManager.GetActiveScene().name;
         SceneManager.LoadScene(currentScene);
         gameOverCanvas.SetActive(false);
+        pauseMenu.SetActive(false);
         Time.timeScale = 1;
     }
 
@@ -325,6 +328,32 @@ public class Player : MonoBehaviour
         ironman = true;
         int currentScene = SceneManager.GetActiveScene().buildIndex;
         SceneManager.LoadScene(currentScene + 1);
+        hero.transform.position = startPos;
+        health = startHealth;
+        attackCooldown = startAttackCooldown;
+        hero.SetActive(true);
+    }
+
+    public void Begin()
+    {
+        int currentScene = SceneManager.GetActiveScene().buildIndex;
+        SceneManager.LoadScene(currentScene + 1);
+        hero.transform.position = startPos;
+        health = 10;
+        attackCooldown = 1;
+        hero.SetActive(true);
+    }
+
+    public void Menu()
+    {
+        SceneManager.LoadScene(0);
+        hero.transform.position = new Vector3 (0, -9, 0);
+        health = 10;
+        attackCooldown = 1;
+        hero.SetActive(false);
+        startPos = new Vector3(-10, -5, 0);
+        jumpForce = 7;
+        speed = 8;
     }
 }
 

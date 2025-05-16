@@ -17,20 +17,9 @@ public class CameraController : MonoBehaviour
 
     public static CameraController instance;
 
-    private void Awake()
+    private void FixedUpdate()
     {
-        //if no gamemanager / if not original gamemanager
-        if (instance != null && instance != this)
-        {
-            //destroy duplicate
-            Destroy(gameObject);
-
-            //ensures the rest of the awake method doesnt execute
-            return;
-        }
-
-        instance = this;
-        DontDestroyOnLoad(gameObject);
+        player = GameObject.Find("Hero").transform;
     }
 
     void Update()
