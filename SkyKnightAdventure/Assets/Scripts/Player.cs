@@ -9,7 +9,7 @@ using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField] Rigidbody2D rb;
+    public Rigidbody2D rb;
     [SerializeField] float jumpForce;
     [SerializeField] float speed;
     [SerializeField] bool grounded;
@@ -65,7 +65,7 @@ public class Player : MonoBehaviour
 
     void CheckForJump ()
     {
-        if ((Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.Space)) && grounded)
+        if (Input.GetKeyDown(KeyCode.W) && grounded)
         {
             rb.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
             animator.SetTrigger("Jump");
