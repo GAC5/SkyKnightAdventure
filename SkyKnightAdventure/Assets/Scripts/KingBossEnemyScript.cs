@@ -53,7 +53,7 @@ public class KingBossEnemyScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        player = GameObject.FindWithTag("Player");
+        player = GameObject.Find("Hero");
         if (player != null)
         {
             player.GetComponent<Transform>();

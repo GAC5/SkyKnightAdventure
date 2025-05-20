@@ -11,10 +11,11 @@ using UnityEditor;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField] GameObject hero;
+    public GameObject hero;
+    public GameObject UI;
     [SerializeField] Rigidbody2D rb;
     [SerializeField] float jumpForce;
-    [SerializeField] float speed;
+    public float speed;
     [SerializeField] bool grounded;
     [SerializeField] SpriteRenderer renderer;
     [SerializeField] float lastYPos;
@@ -23,12 +24,12 @@ public class Player : MonoBehaviour
     [SerializeField] GameObject gameOverCanvas;
     [SerializeField] GameObject cooldownSprite;
     [SerializeField] Text healthText;
-    [SerializeField] float attackCooldown;
-    [SerializeField] int startHealth;
-    [SerializeField] float startAttackCooldown;
+    public float attackCooldown;
+    public int startHealth;
+    public float startAttackCooldown;
     [SerializeField] GameObject upgradeMenu;
     [SerializeField] GameObject pauseMenu;
-    [SerializeField] bool ironman;
+    public bool ironman;
     public Vector3 startPos = new Vector3(-10, -5, 0);
     public int health = 3;
     public Animator animator;
@@ -56,8 +57,6 @@ public class Player : MonoBehaviour
 
     private void Start()
     {
-        hero.SetActive(false);
-        ironman = false;
         upgradeMenu.SetActive(false);
         startHealth = health;
         startAttackCooldown = attackCooldown;
@@ -310,7 +309,14 @@ public class Player : MonoBehaviour
         attackCooldown = startAttackCooldown;
         Debug.Log("Restart");
         string currentScene = SceneManager.GetActiveScene().name;
-        SceneManager.LoadScene(currentScene);
+        if (ironman)
+        {
+            SceneManager.LoadScene(1);
+        }
+        else
+        {
+            SceneManager.LoadScene(currentScene);
+        }
         gameOverCanvas.SetActive(false);
         pauseMenu.SetActive(false);
         Time.timeScale = 1;
@@ -322,38 +328,42 @@ public class Player : MonoBehaviour
         pauseMenu.SetActive(false);
         Time.timeScale = 1;
     }
-    
+
     public void IronStart()
     {
         ironman = true;
-        int currentScene = SceneManager.GetActiveScene().buildIndex;
-        SceneManager.LoadScene(currentScene + 1);
-        hero.transform.position = startPos;
-        health = startHealth;
-        attackCooldown = startAttackCooldown;
-        hero.SetActive(true);
+        hero.transform.position = new Vector3(-10, -5, 0);
+        health = 10;
+        attackCooldown = 1;
+        UI.SetActive(true);
+        Debug.Log("true");
+        SceneManager.LoadScene(1);
     }
 
     public void Begin()
     {
-        int currentScene = SceneManager.GetActiveScene().buildIndex;
-        SceneManager.LoadScene(currentScene + 1);
-        hero.transform.position = startPos;
+        ironman = false;
+        hero.transform.position = new Vector3(-10, -5, 0);
         health = 10;
         attackCooldown = 1;
-        hero.SetActive(true);
+        UI.SetActive(true);
+        Debug.Log("true");
+        SceneManager.LoadScene(1);
     }
 
     public void Menu()
     {
-        SceneManager.LoadScene(0);
-        hero.transform.position = new Vector3 (0, -9, 0);
+        Time.timeScale = 1;
+        pauseMenu.SetActive(false);
+        hero.transform.position = new Vector3 (0, 0, 0);
         health = 10;
         attackCooldown = 1;
-        hero.SetActive(false);
         startPos = new Vector3(-10, -5, 0);
         jumpForce = 7;
         speed = 8;
+        UI.SetActive(false);
+        SceneManager.LoadScene(0);
+        Debug.Log("false");
     }
 }
 

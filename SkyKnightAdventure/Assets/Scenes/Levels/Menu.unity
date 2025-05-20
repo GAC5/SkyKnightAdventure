@@ -287,7 +287,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalPosition: {x: 0, y: 8, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -344,7 +344,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 862763326005379507, guid: 1c57bee82ec3ab14abd99e582e8c171a, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1036985931120429507, guid: 1c57bee82ec3ab14abd99e582e8c171a, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -412,7 +412,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1885998292793438438, guid: 1c57bee82ec3ab14abd99e582e8c171a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1885998292793438438, guid: 1c57bee82ec3ab14abd99e582e8c171a, type: 3}
       propertyPath: m_LocalPosition.z
@@ -672,7 +672,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5575928782458359247, guid: 1c57bee82ec3ab14abd99e582e8c171a, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5841659120196987780, guid: 1c57bee82ec3ab14abd99e582e8c171a, type: 3}
       propertyPath: m_Name
@@ -917,8 +917,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 804196846}
-        m_TargetAssemblyTypeName: Player, Assembly-CSharp
+      - m_Target: {fileID: 910645393}
+        m_TargetAssemblyTypeName: StartGame, Assembly-CSharp
         m_MethodName: Begin
         m_Mode: 1
         m_Arguments:
@@ -979,6 +979,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9440be5f3ce99124aa3f6d0d0dde1636, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerScript: {fileID: 804196846}
+  player: {fileID: 804196845}
 --- !u!1 &985328780
 GameObject:
   m_ObjectHideFlags: 0
@@ -2546,6 +2548,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9440be5f3ce99124aa3f6d0d0dde1636, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerScript: {fileID: 804196846}
+  player: {fileID: 804196845}
 --- !u!114 &989017824
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2590,8 +2594,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 804196846}
-        m_TargetAssemblyTypeName: Player, Assembly-CSharp
+      - m_Target: {fileID: 989017823}
+        m_TargetAssemblyTypeName: StartGame, Assembly-CSharp
         m_MethodName: IronStart
         m_Mode: 1
         m_Arguments:
@@ -2702,7 +2706,7 @@ Transform:
   m_GameObject: {fileID: 1344512313}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 8, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4843,7 +4847,7 @@ Transform:
   m_GameObject: {fileID: 1709536863}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 8, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

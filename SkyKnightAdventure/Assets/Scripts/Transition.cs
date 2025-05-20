@@ -11,6 +11,7 @@ public class Transition : MonoBehaviour
 
     private void Start()
     {
+        boss = GameObject.FindWithTag("Boss");
         bossAnim = boss.GetComponent<Animator>();
     }
 
