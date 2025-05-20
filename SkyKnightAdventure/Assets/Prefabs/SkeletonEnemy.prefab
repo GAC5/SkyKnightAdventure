@@ -332,9 +332,10 @@ MonoBehaviour:
   roamingRange: 3
   roamingSpeed: 2
   roamLeftStart: 1
-  roamWait: 0
+  roamWait: 1
   minIdlePauseTime: 1
   maxIdlePauseTime: 3
+  chanceOfBlocking: 40
 --- !u!1 &9119651559618601538
 GameObject:
   m_ObjectHideFlags: 0

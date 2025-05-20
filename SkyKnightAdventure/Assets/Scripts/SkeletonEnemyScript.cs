@@ -26,6 +26,8 @@ public class SkeletonEnemyScript : MonoBehaviour
     [SerializeField] bool roamWait;
     [SerializeField] float minIdlePauseTime;
     [SerializeField] float maxIdlePauseTime;
+    [SerializeField] int chanceOfBlocking;
+    private bool blocking;
     private float distanceToPlayerX;
     private float distanceToPlayerY;
     private float enemyLastXPosition;
@@ -261,7 +263,7 @@ public class SkeletonEnemyScript : MonoBehaviour
         attackNumber = Random.Range(1, 3); //generates 1 up to 2
         if ((distanceToPlayerX <= attackRange) && (distanceToPlayerY <= verticalAttackThreshold))
         {
-            if (Time.time >= lastAttackTime + attackCooldown)
+            if ((Time.time >= lastAttackTime + attackCooldown) && (blocking == false))
             {
                 rigidbody.velocity = new Vector2(0, rigidbody.velocity.y);
                 animator.SetBool("isStationary", true);
@@ -285,17 +287,33 @@ public class SkeletonEnemyScript : MonoBehaviour
         {
             if (collision.CompareTag("PlayerStrike"))
             {
-                if (healthValue > 1)
+                if (blocking == false)
                 {
-                    animator.SetTrigger("isTakingDamage");
-                    healthValue--;
-                }
-                else if (healthValue <= 1)
+                    if (healthValue > 1)
+                    {
+                        animator.SetTrigger("isTakingDamage");
+                        healthValue--;
+                    }
+                    else if (healthValue <= 1)
+                    {
+                        healthValue--;
+                        animator.SetTrigger("enemyDead");
+                        enemyDead = true;
+                        StartCoroutine(MakeSureDead());
+                    }
+                } 
+            }
+            if (collision.CompareTag("PlayerRangeCheck"))
+            {
+                float roll = Random.Range(1, 101);
+                if (roll <= chanceOfBlocking)
                 {
-                    healthValue--;
-                    animator.SetTrigger("enemyDead");
-                    enemyDead = true;
-                    StartCoroutine(MakeSureDead());
+                    Debug.Log("block started");
+                    blocking = true;
+                    rigidbody.velocity = new Vector2(0, rigidbody.velocity.y);
+                    animator.SetBool("isStationary", true);
+                    animator.SetTrigger("enemyBlocking");
+                    Debug.Log("block triggered");
                 }
             }
         }
@@ -336,6 +354,10 @@ public class SkeletonEnemyScript : MonoBehaviour
         if (animator.GetBool("isStationary") == true)
         {
             animator.SetBool("isStationary", false);
+        }
+        if (blocking == true)
+        {
+            blocking = false;
         }
     }
 
