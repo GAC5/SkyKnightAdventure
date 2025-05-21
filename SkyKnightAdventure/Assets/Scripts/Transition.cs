@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -7,19 +8,24 @@ public class Transition : MonoBehaviour
 {
     [SerializeField] Animator levelExit;
     [SerializeField] GameObject boss;
-    public Animator bossAnim;
+    [SerializeField] GameObject self;
+    public Collider2D bossBox;
 
     private void Start()
     {
+        levelExit.SetBool("Boss Defeated", false);
         boss = GameObject.FindWithTag("Boss");
-        bossAnim = boss.GetComponent<Animator>();
+        bossBox = boss.GetComponent<Collider2D>();
     }
 
     private void Update()
     {
-        if (bossAnim != null)
+        if (levelExit.GetBool("Boss Defeated") == false)
         {
-                levelExit.SetBool("Boss Defeated", bossAnim.GetBool("enemyDead"));
-        }    
+            if (bossBox.isActiveAndEnabled == false)
+            {
+                levelExit.SetBool("Boss Defeated", true);
+            }
+        }
     }
 }
