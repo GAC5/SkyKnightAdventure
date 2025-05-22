@@ -358,9 +358,20 @@ public class KingBossEnemyScript : MonoBehaviour
                         healthValue--;
                         animator.SetTrigger("enemyDead");
                         enemyDead = true;
+                        StartCoroutine(MakeSureDead());
                     }
                 }
             }
+        }
+    }
+
+    private IEnumerator MakeSureDead()
+    {
+        yield return new WaitForSeconds(8);
+        if (enemyDead == true)
+        {
+            animator.SetTrigger("enemyDead");
+            StartCoroutine(MakeSureDead());
         }
     }
 

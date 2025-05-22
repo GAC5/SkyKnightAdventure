@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HeavyBanditEnemyScript : MonoBehaviour
+public class BringerOfDeathBoss : MonoBehaviour
 {
     [SerializeField] Renderer renderer;
     [SerializeField] Animator animator;
@@ -36,6 +36,7 @@ public class HeavyBanditEnemyScript : MonoBehaviour
     private float rightRoamLimit;
     private float startXPosition;
     private bool isPausing;
+    private int attackNumber;
 
 
 
@@ -75,7 +76,7 @@ public class HeavyBanditEnemyScript : MonoBehaviour
         distanceToPlayerX = Mathf.Abs(transform.position.x - player.transform.position.x);
         distanceToPlayerY = Mathf.Abs(transform.position.y - player.transform.position.y);
         if ((distanceToPlayerX <= detectionDistanceX) && (distanceToPlayerY <= detectionDistanceY) && (distanceToPlayerX > attackRange))
-        { 
+        {
             if (!animator.GetBool("isStationary"))
             {
                 MoveTowardsPlayer();
@@ -293,7 +294,7 @@ public class HeavyBanditEnemyScript : MonoBehaviour
 
     private IEnumerator MakeSureDead()
     {
-        yield return new WaitForSeconds(4);
+        yield return new WaitForSeconds(2);
         if (enemyDead == true)
         {
             animator.SetTrigger("enemyDead");
@@ -335,4 +336,3 @@ public class HeavyBanditEnemyScript : MonoBehaviour
     }
 
 }
-

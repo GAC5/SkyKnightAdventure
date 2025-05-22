@@ -287,8 +287,19 @@ public class NewBehaviourScript : MonoBehaviour
                     healthValue--;
                     animator.SetTrigger("enemyDead");
                     enemyDead = true;
+                    StartCoroutine(MakeSureDead());
                 }
             }
+        }
+    }
+
+    private IEnumerator MakeSureDead()
+    {
+        yield return new WaitForSeconds(4);
+        if (enemyDead == true)
+        {
+            animator.SetTrigger("enemyDead");
+            StartCoroutine(MakeSureDead());
         }
     }
 
