@@ -8,9 +8,11 @@ using UnityEngine.UIElements;
 using UnityEngine.SceneManagement;
 using UnityEngine.VFX;
 using UnityEditor;
+using JetBrains.Annotations;
 
 public class Player : MonoBehaviour
 {
+    [SerializeField] SFX sfxManager;
     public GameObject hero;
     public GameObject UI;
     [SerializeField] Rigidbody2D rb;
@@ -107,6 +109,7 @@ public class Player : MonoBehaviour
         if (grounded && ((Input.GetKeyDown(KeyCode.W))))
         {
             rb.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
+            sfxManager.PlaySFX("Jump");
             animator.SetTrigger("Jump");
         }
     }
@@ -142,6 +145,7 @@ public class Player : MonoBehaviour
     {
         if (collision.transform.CompareTag("Ground"))
         {
+            sfxManager.PlaySFX("Land");
             animator.SetBool("Grounded", true);
         }
     }
@@ -159,11 +163,16 @@ public class Player : MonoBehaviour
         if (collision.CompareTag("Death"))
         {
             health = 0;
+            sfxManager.PlaySFX("Death");
         }
         
         if (collision.CompareTag("EnemyStrike"))
         {            
             health--;
+            if (health > -1)
+            {
+                sfxManager.PlaySFX("Hurt");
+            }
         }
 
         if (collision.CompareTag("Finish"))
@@ -190,6 +199,7 @@ public class Player : MonoBehaviour
             startAttackCooldown = attackCooldown;
         }
         upgradeMenu.SetActive(false);
+        sfxManager.PlaySFX("Powerup");
     }
 
     public void UpgradeCooldown()
@@ -209,6 +219,7 @@ public class Player : MonoBehaviour
             startAttackCooldown = attackCooldown;
         }
         upgradeMenu.SetActive(false);
+        sfxManager.PlaySFX("Powerup");
     }
 
     public void UpgradeSpeed()
@@ -228,6 +239,7 @@ public class Player : MonoBehaviour
             startAttackCooldown = attackCooldown;
         }
         upgradeMenu.SetActive(false);
+        sfxManager.PlaySFX("Powerup");
     }
 
     public void UpgradeJump()
@@ -247,6 +259,7 @@ public class Player : MonoBehaviour
             startAttackCooldown = attackCooldown;
         }
         upgradeMenu.SetActive(false);
+        sfxManager.PlaySFX("Powerup");
     }
 
     void SpriteFlip()
@@ -272,6 +285,7 @@ public class Player : MonoBehaviour
                 {
                     whichAttackAnim = 0;
                 }
+                sfxManager.PlaySFX("Hit");
                 animator.SetTrigger("Attack");
                 animator.SetInteger("WhichAttackAnim", whichAttackAnim);
                 whichAttackAnim++;
@@ -320,6 +334,7 @@ public class Player : MonoBehaviour
         gameOverCanvas.SetActive(false);
         pauseMenu.SetActive(false);
         Time.timeScale = 1;
+        sfxManager.PlaySFX("Select");
     }
 
     public void Resume()
@@ -327,6 +342,7 @@ public class Player : MonoBehaviour
         Debug.Log("Resume");
         pauseMenu.SetActive(false);
         Time.timeScale = 1;
+        sfxManager.PlaySFX("Select");
     }
 
     public void IronStart()
@@ -338,6 +354,7 @@ public class Player : MonoBehaviour
         UI.SetActive(true);
         Debug.Log("true");
         SceneManager.LoadScene(1);
+        sfxManager.PlaySFX("Select");
     }
 
     public void Begin()
@@ -349,6 +366,7 @@ public class Player : MonoBehaviour
         UI.SetActive(true);
         Debug.Log("true");
         SceneManager.LoadScene(1);
+        sfxManager.PlaySFX("Select");
     }
 
     public void Menu()
@@ -364,6 +382,7 @@ public class Player : MonoBehaviour
         UI.SetActive(false);
         SceneManager.LoadScene(0);
         Debug.Log("false");
+        sfxManager.PlaySFX("Select");
     }
 }
 
