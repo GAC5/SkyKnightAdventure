@@ -294,7 +294,7 @@ public class BringerOfDeathBoss : MonoBehaviour
 
     private IEnumerator MakeSureDead()
     {
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(4);
         if (enemyDead == true)
         {
             animator.SetTrigger("enemyDead");
