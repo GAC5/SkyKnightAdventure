@@ -7,8 +7,7 @@ TagManager:
   - Ground
   - PlayerStrike
   - EnemyStrike
-  - Death
-  - Boss
+  - PlayerRangeCheck
   layers:
   - Default
   - TransparentFX

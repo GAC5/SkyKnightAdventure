@@ -42,10 +42,8 @@ public class KingBossEnemyScript : MonoBehaviour
     private int rageModeHitCounter = 0;
     [SerializeField] float rageModeDuration;
     [SerializeField] float rageModeSpeed;
-    [SerializeField] float rageModeTimeActivation;
+    [SerializeField] float rageModeAttackCooldown;
     [SerializeField] int rageModeHitActivation;
-    private float timeToRageMode;
-    private float rageModeEndTime;
 
 
 
@@ -61,7 +59,6 @@ public class KingBossEnemyScript : MonoBehaviour
         enemyLastXPosition = transform.position.x;
         originalScale = transform.localScale;
         startXPosition = transform.position.x;
-        timeToRageMode = Time.time + rageModeTimeActivation;
     }
 
     // Update is called once per frame
@@ -90,16 +87,25 @@ public class KingBossEnemyScript : MonoBehaviour
         bool closeToPlayer = ((distanceToPlayerX <= detectionDistanceX) && (distanceToPlayerY <= detectionDistanceY));
         if ((closeToPlayer) && (distanceToPlayerX > attackRange) && (!rageMode))
         {
-            MoveTowardsPlayer();
+            if (!animator.GetBool("isStationary"))
+            {
+                MoveTowardsPlayer();
+            }
+            CheckForMove();
         }
         else if ((closeToPlayer) && (distanceToPlayerX <= attackRange) && (!rageMode))
         {
             EnemyAttack();
+            CheckForMove();
 
         }
         else if ((rageModeActivated) && (rageMode))
         {
-            MoveTowardsPlayer();
+            if (!animator.GetBool("isStationary"))
+            {
+                MoveTowardsPlayer();
+            }
+            CheckForMove();
             EnemyRageAttack();
            
         }
@@ -108,7 +114,10 @@ public class KingBossEnemyScript : MonoBehaviour
             rigidbody.velocity = new Vector2(0, rigidbody.velocity.y);
             if (roamingActivated)
             {
-                idleWalk();
+                if (!animator.GetBool("isStationary"))
+                {
+                    idleWalk();
+                }
             }
 
         }
@@ -199,37 +208,51 @@ public class KingBossEnemyScript : MonoBehaviour
             rigidbody.velocity = new Vector2(0, rigidbody.velocity.y);
         }
 
-        CheckForMove();
-
     }
 
     private void CheckForMove()
     {
         float enemyMovement = transform.position.x - enemyLastXPosition;
 
-        bool isMoving = Mathf.Abs(enemyMovement) > movementThreshold;
-
-        if (isMoving == true && animator.GetBool("runAnimationController") == false)
+        if (distanceToPlayerX <= attackRange)
         {
-            animator.SetTrigger("enemyMoving");
-            animator.SetBool("runAnimationController", true);
-        }
-
-        if (isMoving)
-        {
-
-            if (enemyMovement < 0)
-            {
-                transform.localScale = new Vector3(Mathf.Abs(originalScale.x), originalScale.y, originalScale.z);
-            }
-            else if (enemyMovement > 0)
+            if ((transform.position.x - player.transform.position.x) < -.1)
             {
                 transform.localScale = new Vector3(-Mathf.Abs(originalScale.x), originalScale.y, originalScale.z);
             }
+            else if ((transform.position.x - player.transform.position.x) > .1)
+            {
+                transform.localScale = new Vector3(Mathf.Abs(originalScale.x), originalScale.y, originalScale.z);
+            }
+        }
+        else
+        {
+            bool isMoving = Mathf.Abs(enemyMovement) > movementThreshold;
+
+            if (isMoving == true && animator.GetBool("runAnimationController") == false)
+            {
+                animator.SetTrigger("enemyMoving");
+                animator.SetBool("runAnimationController", true);
+            }
+
+            if (isMoving)
+            {
+
+                if (enemyMovement < 0)
+                {
+                    transform.localScale = new Vector3(Mathf.Abs(originalScale.x), originalScale.y, originalScale.z);
+                }
+                else if (enemyMovement > 0)
+                {
+                    transform.localScale = new Vector3(-Mathf.Abs(originalScale.x), originalScale.y, originalScale.z);
+                }
+            }
+
+            enemyLastXPosition = transform.position.x;
         }
 
-        enemyLastXPosition = transform.position.x;
     }
+        
 
     private void CheckForMoveIdle()
     {
@@ -263,9 +286,10 @@ public class KingBossEnemyScript : MonoBehaviour
     {
         attackNumber = Random.Range(1, 4); //generates 1 up to 3
         if ((distanceToPlayerX <= attackRange) && (distanceToPlayerY <= verticalAttackThreshold))
-        {
+        { 
             if (Time.time >= lastAttackTime + attackCooldown)
             {
+                rigidbody.velocity = new Vector2(0, rigidbody.velocity.y);
                 animator.SetBool("isStationary", true);
                 if (attackNumber == 1)
                 {
@@ -289,21 +313,26 @@ public class KingBossEnemyScript : MonoBehaviour
     {
         if ((distanceToPlayerX <= attackRange) && (distanceToPlayerY <= verticalAttackThreshold))
         {
-            animator.SetBool("isStationary", true);
-            if (player.transform.position.y > transform.position.y)
+            if (Time.time >= lastAttackTime + rageModeAttackCooldown)
             {
-                animator.SetTrigger("enemyRageAttack3");
-            }
-            else if (distanceToPlayerX >= 2)
-            {
-                animator.SetTrigger("enemyRageAttack2");
-            }
-            else
-            {
-                animator.SetTrigger("enemyRageAttack1");
-            }
-        }
-            
+                rigidbody.velocity = new Vector2(0, rigidbody.velocity.y);
+                animator.SetBool("isStationary", true);
+                if (player.transform.position.y > transform.position.y)
+                {
+                    animator.SetTrigger("enemyRageAttack3");
+                }
+                else if (distanceToPlayerX >= 2)
+                {
+                    animator.SetTrigger("enemyRageAttack2");
+                }
+                else
+                {
+                    animator.SetTrigger("enemyRageAttack1");
+                }
+
+                lastAttackTime = Time.time;
+            } 
+        }      
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -329,9 +358,20 @@ public class KingBossEnemyScript : MonoBehaviour
                         healthValue--;
                         animator.SetTrigger("enemyDead");
                         enemyDead = true;
+                        StartCoroutine(MakeSureDead());
                     }
                 }
             }
+        }
+    }
+
+    private IEnumerator MakeSureDead()
+    {
+        yield return new WaitForSeconds(8);
+        if (enemyDead == true)
+        {
+            animator.SetTrigger("enemyDead");
+            StartCoroutine(MakeSureDead());
         }
     }
 
@@ -348,9 +388,11 @@ public class KingBossEnemyScript : MonoBehaviour
     private IEnumerator DoRageMode()
     {
         rageMode = true;
+        renderer.material.color = Color.red;
         Debug.Log("RAGE MODE ON!");
         yield return new WaitForSeconds(rageModeDuration);
         rageMode = false;
+        renderer.material.color = Color.white;
         Debug.Log("RAGE MODE OFF!");
     }
 
