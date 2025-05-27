@@ -26,6 +26,7 @@ public class BringerOfDeathBoss : MonoBehaviour
     [SerializeField] float attackCooldown;
     [SerializeField] float castCooldown;
     [SerializeField] float spellSummonHeight;
+    public bool destroySpell;
     private bool playerEncountered;
     private int activationHealth; 
     private float distanceToPlayerX;

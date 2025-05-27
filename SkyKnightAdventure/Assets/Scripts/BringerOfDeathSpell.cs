@@ -4,10 +4,13 @@ using UnityEngine;
 
 public class BringerOfDeathSpell : MonoBehaviour
 {
+    private GameObject boss;
+    private BringerOfDeathBoss bossScript; 
     // Start is called before the first frame update
     void Start()
     {
-        
+        boss = GameObject.Find("BringerOfDeathBoss");
+        bossScript = boss.GetComponent<BringerOfDeathBoss>();
     }
 
     // Update is called once per frame
@@ -18,6 +21,9 @@ public class BringerOfDeathSpell : MonoBehaviour
 
     private void DestroySelf()
     {
-        Destroy(gameObject);
+        if (bossScript.destroySpell == true)
+        {
+            Destroy(gameObject);
+        }
     }
 }
