@@ -8,6 +8,7 @@ TagManager:
   - PlayerStrike
   - EnemyStrike
   - PlayerRangeCheck
+  - Boss
   layers:
   - Default
   - TransparentFX
