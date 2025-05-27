@@ -10,8 +10,9 @@ public class BringerOfDeathBoss : MonoBehaviour
     [SerializeField] Rigidbody2D rigidbody;
     [SerializeField] Collider2D collider;
     private GameObject player;
-    private GameObject spell;
-    private BringerOfDeathSpell spellScript;
+    private GameObject portal;
+    [SerializeField] GameObject spell;
+    private BringerOfDeathPortal portalScript;
 
     [SerializeField] int healthValue;
     [SerializeField] int attackValue;
@@ -23,6 +24,9 @@ public class BringerOfDeathBoss : MonoBehaviour
     [SerializeField] float speed;
     [SerializeField] float movementThreshold = 0.01f;
     [SerializeField] float attackCooldown;
+    [SerializeField] float castCooldown;
+    [SerializeField] float spellSummonHeight;
+    public bool destroySpell;
     private bool playerEncountered;
     private int activationHealth; 
     private float distanceToPlayerX;
@@ -30,6 +34,7 @@ public class BringerOfDeathBoss : MonoBehaviour
     private float enemyLastXPosition;
     private Vector3 originalScale;
     private float lastAttackTime;
+    private float lastCastTime;
     private bool enemyDead;
 
 
@@ -38,8 +43,8 @@ public class BringerOfDeathBoss : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        spell = GameObject.Find("BringerOfDeathSpell");
-        spellScript = spell.GetComponent<BringerOfDeathSpell>();
+        portal = GameObject.Find("BringerOfDeathPortal");
+        portalScript = portal.GetComponent<BringerOfDeathPortal>();
         player = GameObject.Find("Hero");
         if (player != null)
         {
@@ -97,6 +102,7 @@ public class BringerOfDeathBoss : MonoBehaviour
                 MoveTowardsPlayer();
             }
             CheckForMove();
+            EnemyCast();
         }
         else if ((distanceToPlayerX <= detectionDistanceX) && (distanceToPlayerY <= detectionDistanceY) && (distanceToPlayerX <= attackRange))
         {
@@ -184,6 +190,17 @@ public class BringerOfDeathBoss : MonoBehaviour
         }
     }
 
+    private void EnemyCast()
+    {
+        if (Time.time >= lastCastTime + castCooldown)
+        {
+            rigidbody.velocity = new Vector2(0, rigidbody.velocity.y);
+            animator.SetBool("isStationary", true);
+            animator.SetTrigger("enemyCast");
+            lastCastTime = Time.time;
+        }
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (enemyDead == false)
@@ -199,7 +216,7 @@ public class BringerOfDeathBoss : MonoBehaviour
                 {
                     healthValue--;
                     animator.SetTrigger("enemyDead");
-                    spellScript.BossDead();
+                    portalScript.BossDead();
                     enemyDead = true;
                     StartCoroutine(MakeSureDead());
                 }
@@ -213,7 +230,7 @@ public class BringerOfDeathBoss : MonoBehaviour
         if (enemyDead == true)
         {
             animator.SetTrigger("enemyDead");
-            spellScript.BossDead();
+            portalScript.BossDead();
             StartCoroutine(MakeSureDead());
         }
     }
@@ -246,14 +263,23 @@ public class BringerOfDeathBoss : MonoBehaviour
         }
     }
 
+    private void SpellSummon()
+    {
+        float spawnPositionX = player.transform.position.x;
+        float spawnPositionY = player.transform.position.y;
+        float spawnPositionZ = player.transform.position.z;
+        Vector3 spawnPosition = new Vector3(spawnPositionX, spawnPositionY + spellSummonHeight, spawnPositionZ);
+        Instantiate(spell, spawnPosition, Quaternion.identity);
+    }
+
     private void LowerHover()
     {
-        spellScript.hoverHeight = 1.75f;
+        portalScript.hoverHeight = 1.75f;
     }
 
     private void UpperHover()
     {
-        spellScript.hoverHeight = 3;
+        portalScript.hoverHeight = 3;
     }
 
     private void RendererToggle()
