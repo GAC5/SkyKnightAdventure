@@ -596,11 +596,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7515689671057095423, guid: 4fd1cd92d2dea6d499f3c3081c11a66f, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -7.26
+      value: -7.84
       objectReference: {fileID: 0}
     - target: {fileID: 7515689671057095423, guid: 4fd1cd92d2dea6d499f3c3081c11a66f, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -14.05
+      value: -13.47
       objectReference: {fileID: 0}
     - target: {fileID: 7515689671057095423, guid: 4fd1cd92d2dea6d499f3c3081c11a66f, type: 3}
       propertyPath: m_LocalPosition.z
@@ -719,13 +719,14 @@ GameObject:
   - component: {fileID: 1395599407}
   - component: {fileID: 1395599406}
   - component: {fileID: 1395599405}
+  - component: {fileID: 1395599408}
   m_Layer: 0
-  m_Name: EnemySpell
+  m_Name: BringerOfDeathSpell
   m_TagString: EnemyStrike
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1395599404
 Transform:
   m_ObjectHideFlags: 0
@@ -735,8 +736,8 @@ Transform:
   m_GameObject: {fileID: 1395599403}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.02, y: 0.414, z: 0}
-  m_LocalScale: {x: 1.1570963, y: 1.6667217, z: 0.16666667}
+  m_LocalPosition: {x: 0.050000034, y: 0.5, z: 0.012731891}
+  m_LocalScale: {x: 4, y: 2, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2099332366}
@@ -769,7 +770,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1395599403}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -848,7 +849,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 29702762353113097, guid: 1914d95466e3d4341a618c35a56d5f82, type: 3}
+  m_Sprite: {fileID: 5002164809356596157, guid: 38e26291822c9b9479504c21a5a98126, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -859,6 +860,22 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1395599408
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1395599403}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9518333bdc013d43944e6e7279bc0a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 1395599405}
+  renderer: {fileID: 1395599407}
+  hoverSpeed: 6
+  hoverHeight: 3
 --- !u!1 &1441960048
 GameObject:
   m_ObjectHideFlags: 0
@@ -936,8 +953,12 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: 1.9241781, y: 0.7945924}
-      - {x: 3.8364944, y: 1.5240202}
+    - - {x: 2.7339673, y: -1.602385}
+      - {x: 2.7840762, y: -1.4825635}
+      - {x: 3.770949, y: -0.09200978}
+      - {x: 4.031312, y: 0.2825632}
+      - {x: 4.435737, y: 0.5522723}
+      - {x: 4.9054155, y: 0.8599925}
       - {x: 6.12982, y: 1.7956438}
       - {x: 2.6084583, y: 2.1641233}
       - {x: 0.98999214, y: 1.7369745}
@@ -947,9 +968,12 @@ PolygonCollider2D:
       - {x: -1.8494266, y: -1.2309394}
       - {x: -1.2127253, y: -1.6383967}
       - {x: 0.124480605, y: -2.3468938}
-      - {x: 1.0848955, y: -1.6831088}
-      - {x: 1.2590528, y: -0.58433914}
-      - {x: 1.0903741, y: 0.47188663}
+      - {x: 0.6617513, y: -2.5698047}
+      - {x: 0.98760414, y: -2.5315456}
+      - {x: 1.6517485, y: -2.379528}
+      - {x: 1.9714699, y: -2.2223268}
+      - {x: 2.3279753, y: -1.9447861}
+      - {x: 2.596583, y: -1.7793288}
   m_UseDelaunayMesh: 0
 --- !u!212 &1441960051
 SpriteRenderer:
@@ -1088,7 +1112,7 @@ Transform:
   m_GameObject: {fileID: 1563053174}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.3, y: -4.48, z: 15}
+  m_LocalPosition: {x: 0.32, y: -4.67, z: 15}
   m_LocalScale: {x: 3.3775692, y: 3.3775692, z: 3.3775692}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1406,7 +1430,7 @@ GameObject:
   - component: {fileID: 2099332362}
   - component: {fileID: 2099332361}
   m_Layer: 0
-  m_Name: BringerOfDeathBoss
+  m_Name: BringerOfDeath
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1430,20 +1454,14 @@ MonoBehaviour:
   collider: {fileID: 2099332364}
   healthValue: 3
   attackValue: 1
-  detectionDistanceX: 15
-  detectionDistanceY: 15
-  attackRange: 6
+  iniationRange: 20
+  detectionDistanceX: 10
+  detectionDistanceY: 10
+  attackRange: 5
   verticalAttackThreshold: 3
   speed: 5
   movementThreshold: 0.01
   attackCooldown: 1
-  roamingActivated: 0
-  roamingRange: 0
-  roamingSpeed: 0
-  roamLeftStart: 0
-  roamWait: 0
-  minIdlePauseTime: 0
-  maxIdlePauseTime: 0
 --- !u!95 &2099332362
 Animator:
   serializedVersion: 5
@@ -1597,8 +1615,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2099332360}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.64, y: -5.86, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 8.39, y: -3.04, z: -0.07639135}
   m_LocalScale: {x: 6, y: 6, z: 6}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1771,11 +1789,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6628935161532527519, guid: e09babe84440b954a8bedf411393a1a4, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.13
+      value: 1.55
       objectReference: {fileID: 0}
     - target: {fileID: 6628935161532527519, guid: e09babe84440b954a8bedf411393a1a4, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -12.37
+      value: -12.87
       objectReference: {fileID: 0}
     - target: {fileID: 6628935161532527519, guid: e09babe84440b954a8bedf411393a1a4, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1900,11 +1918,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 6486792690581553463, guid: c8327613c6fe5d043a0005c107eabea7, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3.67
+      value: 4.08
       objectReference: {fileID: 0}
     - target: {fileID: 6486792690581553463, guid: c8327613c6fe5d043a0005c107eabea7, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -12.99
+      value: -12.62
       objectReference: {fileID: 0}
     - target: {fileID: 6486792690581553463, guid: c8327613c6fe5d043a0005c107eabea7, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1993,7 +2011,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1885998292793438438, guid: 1c57bee82ec3ab14abd99e582e8c171a, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.13551
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1885998292793438438, guid: 1c57bee82ec3ab14abd99e582e8c171a, type: 3}
       propertyPath: m_LocalRotation.w
