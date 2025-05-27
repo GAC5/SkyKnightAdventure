@@ -721,7 +721,7 @@ GameObject:
   - component: {fileID: 1395599405}
   - component: {fileID: 1395599408}
   m_Layer: 0
-  m_Name: BringerOfDeathSpell
+  m_Name: BringerOfDeathPortal
   m_TagString: EnemyStrike
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1430,7 +1430,7 @@ GameObject:
   - component: {fileID: 2099332362}
   - component: {fileID: 2099332361}
   m_Layer: 0
-  m_Name: BringerOfDeath
+  m_Name: BringerOfDeathBoss
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1452,6 +1452,7 @@ MonoBehaviour:
   animator: {fileID: 2099332362}
   rigidbody: {fileID: 2099332363}
   collider: {fileID: 2099332364}
+  spell: {fileID: 8165983027806495777, guid: 65c95bb47ba61f449a6ce8b30f75835c, type: 3}
   healthValue: 3
   attackValue: 1
   iniationRange: 20
@@ -1462,6 +1463,8 @@ MonoBehaviour:
   speed: 5
   movementThreshold: 0.01
   attackCooldown: 1
+  castCooldown: 3
+  spellSummonHeight: 4
 --- !u!95 &2099332362
 Animator:
   serializedVersion: 5
@@ -1616,7 +1619,7 @@ Transform:
   m_GameObject: {fileID: 2099332360}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 8.39, y: -3.04, z: -0.07639135}
+  m_LocalPosition: {x: 9.27, y: -5.85, z: -0.07639135}
   m_LocalScale: {x: 6, y: 6, z: 6}
   m_ConstrainProportionsScale: 0
   m_Children:
