@@ -351,6 +351,9 @@ public class Player : MonoBehaviour
         hero.transform.position = new Vector3(-10, -5, 0);
         health = 10;
         attackCooldown = 1;
+        startPos = hero.transform.position;
+        startHealth = health;
+        startAttackCooldown = attackCooldown;
         UI.SetActive(true);
         Debug.Log("true");
         SceneManager.LoadScene(1);
@@ -363,6 +366,9 @@ public class Player : MonoBehaviour
         hero.transform.position = new Vector3(-10, -5, 0);
         health = 10;
         attackCooldown = 1;
+        startPos = hero.transform.position;
+        startHealth = health;
+        startAttackCooldown = attackCooldown;
         UI.SetActive(true);
         Debug.Log("true");
         SceneManager.LoadScene(1);

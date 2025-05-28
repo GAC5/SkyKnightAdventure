@@ -545,7 +545,7 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: 652f7165b7c30ab46af6c4aad90a639b, type: 2}
-    m_FontSize: 120
+    m_FontSize: 100
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 0
@@ -8277,6 +8277,10 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 60a3a8a047cd4814c86af1909641b175, type: 2}
+    - target: {fileID: 7883756963818673684, guid: 6a91f10011d41484cba8ce6d4cca8cd8, type: 3}
+      propertyPath: healthValue
+      value: 12
+      objectReference: {fileID: 0}
     - target: {fileID: 7883756963818673684, guid: 6a91f10011d41484cba8ce6d4cca8cd8, type: 3}
       propertyPath: roamingActivated
       value: 0
