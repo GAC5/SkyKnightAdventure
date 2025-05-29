@@ -1,14 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
-using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.UIElements;
 using UnityEngine.SceneManagement;
-using UnityEngine.VFX;
-using UnityEditor;
-using JetBrains.Annotations;
 
 public class Player : MonoBehaviour
 {
