@@ -326,6 +326,10 @@ public class Player : MonoBehaviour
         if (ironman)
         {
             SceneManager.LoadScene(1);
+            jumpForce = 7;
+            speed = 8;
+            health = 10;
+            attackCooldown = 1;
         }
         else
         {
