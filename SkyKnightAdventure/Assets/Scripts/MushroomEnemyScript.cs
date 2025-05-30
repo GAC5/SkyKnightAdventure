@@ -282,16 +282,18 @@ public class MushroomEnemyScript : MonoBehaviour
 
     private void EnemyAttackKnockback()
     {
-        float forceDirection = player.transform.position.x - transform.position.x;
-        if (forceDirection < 0)
+        if ((distanceToPlayerX <= detectionDistanceX) && (distanceToPlayerY <= detectionDistanceY) && (distanceToPlayerX <= attackRange))
         {
-            playerRB.AddForce(new Vector2(-attackKnockbackForce, 0), ForceMode2D.Impulse);
-        }
-        else if (forceDirection > 0)
-        {
-            playerRB.AddForce(new Vector2(attackKnockbackForce, 0), ForceMode2D.Impulse);
-        }
-           
+            float forceDirection = player.transform.position.x - transform.position.x;
+            if (forceDirection < 0)
+            {
+                playerRB.AddForce(new Vector2(-attackKnockbackForce, 0), ForceMode2D.Impulse);
+            }
+            else if (forceDirection > 0)
+            {
+                playerRB.AddForce(new Vector2(attackKnockbackForce, 0), ForceMode2D.Impulse);
+            }
+        }  
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
